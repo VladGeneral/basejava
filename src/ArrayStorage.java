@@ -18,10 +18,10 @@ public class ArrayStorage {
         System.out.println("All resume are removed");
     }
 
-    void save(Resume r) {
+    void save(Resume resume) {
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
-                storage[i] = r;
+                storage[i] = resume;
                 System.out.println("Resume saved");
                 break;
             }
@@ -29,14 +29,14 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        Resume getValue = null;
-        for (Resume resume : storage) {
-            if (resume != null && resume.uuid.equals(uuid)) {
-                getValue = resume;
+        Resume resume = null;
+        for (Resume o : storage) {
+            if (o != null && o.uuid.equals(uuid)) {
+                 resume = o;
                 break;
             }
         }
-        return getValue;
+        return resume;
     }
 
     void delete(String uuid) {
