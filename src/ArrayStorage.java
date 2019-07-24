@@ -1,22 +1,15 @@
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
-    Resume[] activeResum;
-    int arraySize;
+    int size;
 
     void clear() {
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null) {
-                storage[i] = null;
-            } else {
-                break;
-            }
+        for (int i = 0; i < size; i++) {
+            storage[i] = null;
         }
+        size = 0;
         System.out.println("All resume are removed");
     }
 
@@ -24,6 +17,7 @@ public class ArrayStorage {
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
                 storage[i] = resume;
+                size++;
                 System.out.println("Resume saved");
                 break;
             }
@@ -42,15 +36,16 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        for (int i = 0; i < storage.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)) {
                 storage[i] = null;
+                size--;
                 System.out.println("Resume deleted");
                 break;
             }
         }
 
-        for (int i = 0; i < storage.length - 1; i++) {  //убираю нулевые значения, смещая их вправо(если они есть)
+        for (int i = 0; i < size; i++) {  //убираю нулевые значения, смещая их вправо(если они есть)
             if (storage[i] == null) {
                 storage[i] = storage[i + 1];
                 storage[i + 1] = null;
@@ -62,25 +57,14 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        size(); //вызываю метод, чтобы выбрать ненулевые элементы
-        activeResum = new Resume[arraySize];
-        for (int i = 0; i < arraySize; i++) {
+        Resume[] activeResum = new Resume[size];
+        for (int i = 0; i < size; i++) {
             activeResum[i] = storage[i];
         }
         return activeResum;
     }
 
     int size() {
-        arraySize = 0;
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null) {   //перебираю значения, пока цикл не дойдет до нулевого элемента
-                arraySize++;
-            } else {
-                break;
-            }
-
-        }
-
-        return arraySize;
+        return size;
     }
 }
