@@ -63,7 +63,7 @@ public class ArrayStorage {
     int size() {
         int arraySize = 0;
         for (Resume resume : storage) {
-            while (resume != null) {
+            if (resume != null) {
                 arraySize++;
             }
         }
