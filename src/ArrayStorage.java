@@ -6,6 +6,8 @@ import java.util.List;
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    Resume[] activeResum;
+    int arraySize;
 
     void clear() {
         for (int i = 0; i < storage.length; i++) {
@@ -45,28 +47,38 @@ public class ArrayStorage {
                 break;
             }
         }
+
+        for (int i = 0; i < storage.length - 1; i++) {  //убираю нулевые значения, смещая их вправо(если они есть)
+            if (storage[i] == null) {
+                storage[i] = storage[i + 1];
+                storage[i + 1] = null;
+            }
+        }
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        List<Resume> activeResume = new ArrayList<>();
-        for (Resume resume : storage) {
-            if (resume != null) {
-                activeResume.add(resume);
-            }
+        size(); //вызываю метод, чтобы выбрать ненулевые элементы
+        activeResum = new Resume[arraySize];
+        for (int i = 0; i < arraySize; i++) {
+            activeResum[i] = storage[i];
         }
-        return activeResume.toArray(new Resume[0]);
+        return activeResum;
     }
 
     int size() {
-        int arraySize = 0;
-        for (Resume resume : storage) {
-            if (resume != null) {
+        arraySize = 0;
+        for (int i = 0; i < storage.length; i++) {
+            if (storage[i] != null) {   //перебираю значения, пока цикл не дойдет до нулевого элемента
                 arraySize++;
+            } else {
+                break;
             }
+
         }
+
         return arraySize;
     }
 }
