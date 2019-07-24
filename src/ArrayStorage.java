@@ -13,6 +13,8 @@ public class ArrayStorage {
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] != null) {
                 storage[i] = null;
+            } else {
+                break;
             }
         }
         System.out.println("All resume are removed");
@@ -32,7 +34,7 @@ public class ArrayStorage {
         Resume resume = null;
         for (Resume o : storage) {
             if (o != null && o.uuid.equals(uuid)) {
-                 resume = o;
+                resume = o;
                 break;
             }
         }
