@@ -25,8 +25,13 @@ public class ArrayStorage {
 
     void save(Resume resume) {
         if (!isResumePresent(resume.uuid)) {
-            storage[size] = resume;
-            size++;
+            if (size < storage.length - 1){
+                storage[size] = resume;
+                size++;
+            }
+            else {
+                System.out.println("Too many resumes in array");
+            }
         }
     }
 
