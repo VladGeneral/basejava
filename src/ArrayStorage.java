@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * Array based storage for Resumes
  */
@@ -16,11 +18,9 @@ public class ArrayStorage {
     }
 
     void clear() {
-        for (int i = 0; i < size; i++) {
-            storage[i] = null;
-        }
+        Arrays.fill(storage,null);
         size = 0;
-        System.out.println("All resume are removed");
+        System.out.println("Resume - All removed");
     }
 
     void save(Resume resume) {
