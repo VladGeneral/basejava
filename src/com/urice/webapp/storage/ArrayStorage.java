@@ -16,9 +16,9 @@ public class ArrayStorage {
         int index = findIndex(resume.getUuid());
         if (index != -1) {
             storage[index] = resume;
-            System.out.println("Resume: " + resume.getUuid() +" updated");
+            System.out.println("Resume: " + resume.getUuid() + " updated");
         } else {
-            System.out.println("Resume: " + resume.getUuid() +" not updated");
+            System.out.println("Resume: " + resume.getUuid() + " not updated");
         }
     }
 
@@ -34,22 +34,22 @@ public class ArrayStorage {
             if (size < ARRAY_LENGTH) {
                 storage[size] = resume;
                 size++;
-                System.out.println("Resume: " + resume.getUuid() +" saved");
+                System.out.println("Resume: " + resume.getUuid() + " saved");
             } else {
-                System.out.println("Resume: " + resume.getUuid() +" not saved - too many resumes in array");
+                System.out.println("Resume: " + resume.getUuid() + " not saved - too many resumes in array");
             }
         } else {
-            System.out.println("Resume: " + resume.getUuid() +" not saved");
+            System.out.println("Resume: " + resume.getUuid() + " not saved");
         }
     }
 
     public Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index != -1) {
-            System.out.println("Resume: " + uuid +" received");
+            System.out.println("Resume: " + uuid + " received");
             return storage[index];
         } else {
-            System.out.println("Resume: " + uuid +" not received");
+            System.out.println("Resume: " + uuid + " not received");
             return null;
         }
     }
@@ -60,9 +60,9 @@ public class ArrayStorage {
             size--;
             storage[index] = storage[size];
             storage[size] = null;
-            System.out.println("Resume: " + uuid +" deleted");
+            System.out.println("Resume: " + uuid + " deleted");
         } else {
-            System.out.println("Resume: " + uuid +" not deleted");
+            System.out.println("Resume: " + uuid + " not deleted");
         }
     }
 
