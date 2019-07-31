@@ -13,8 +13,9 @@ public class ArrayStorage {
     private int size;
 
     public void update(Resume resume) {
-        if (findIndex(resume.getUuid()) != -1) {
-            storage[findIndex(resume.getUuid())] = resume;
+        int index = findIndex(resume.getUuid());
+        if (index != -1) {
+            storage[index] = resume;
             System.out.println("Resume: " + resume.getUuid() +" updated");
         } else {
             System.out.println("Resume: " + resume.getUuid() +" not updated");
@@ -28,7 +29,8 @@ public class ArrayStorage {
     }
 
     public void save(Resume resume) {
-        if (findIndex(resume.getUuid()) == -1) {
+        int index = findIndex(resume.getUuid());
+        if (index == -1) {
             if (size < ARRAY_LENGTH) {
                 storage[size] = resume;
                 size++;
@@ -42,9 +44,10 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        if (findIndex(uuid) != -1) {
+        int index = findIndex(uuid);
+        if (index != -1) {
             System.out.println("Resume: " + uuid +" received");
-            return storage[findIndex(uuid)];
+            return storage[index];
         } else {
             System.out.println("Resume: " + uuid +" not received");
             return null;
@@ -52,9 +55,10 @@ public class ArrayStorage {
     }
 
     public void delete(String uuid) {
-        if (findIndex(uuid) != -1) {
+        int index = findIndex(uuid);
+        if (index != -1) {
             size--;
-            storage[findIndex(uuid)] = storage[size];
+            storage[index] = storage[size];
             storage[size] = null;
             System.out.println("Resume: " + uuid +" deleted");
         } else {
