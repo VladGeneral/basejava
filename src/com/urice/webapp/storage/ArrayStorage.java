@@ -8,14 +8,14 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    final int ARRAY_LENGTH = 10_000;
+    public static final int ARRAY_LENGTH = 10_000;
     private Resume[] storage = new Resume[10000];
     private int size;
     private int index = -1;
 
     public void update(Resume resume) {
         if (findArrayIndex(resume.getUuid()) != -1) {
-            storage[index].setUuid(resume.getUuid());
+            storage[index] = resume;
             System.out.println("Resume updated");
         } else {
             System.out.println("Resume not updated");
@@ -37,15 +37,17 @@ public class ArrayStorage {
             } else {
                 System.out.println("Resume not saved - too many resumes in array");
             }
+        } else {
+            System.out.println("Resume not saved");
         }
     }
 
     public Resume get(String uuid) {
         if (findArrayIndex(uuid) != -1) {
-            System.out.println("Resume recieved");
+            System.out.println("Resume received");
             return storage[index];
         } else {
-            System.out.println("Resume not recieved");
+            System.out.println("Resume not received");
             return null;
         }
     }
@@ -61,11 +63,11 @@ public class ArrayStorage {
         }
     }
 
-    int findArrayIndex(String uuid) {
+    private int findArrayIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 index = i;
-                return i;
+                return index;
             }
         }
         return -1;
