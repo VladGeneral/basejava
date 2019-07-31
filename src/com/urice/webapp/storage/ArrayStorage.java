@@ -9,16 +9,15 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
     public static final int ARRAY_LENGTH = 10_000;
-    private Resume[] storage = new Resume[10000];
+    private Resume[] storage = new Resume[ARRAY_LENGTH];
     private int size;
-    private int index = -1;
 
     public void update(Resume resume) {
-        if (findArrayIndex(resume.getUuid()) != -1) {
-            storage[index] = resume;
-            System.out.println("Resume updated");
+        if (findIndex(resume.getUuid()) != -1) {
+            storage[findIndex(resume.getUuid())] = resume;
+            System.out.println("Resume: " + resume.getUuid() +" updated");
         } else {
-            System.out.println("Resume not updated");
+            System.out.println("Resume: " + resume.getUuid() +" not updated");
         }
     }
 
@@ -29,45 +28,44 @@ public class ArrayStorage {
     }
 
     public void save(Resume resume) {
-        if (findArrayIndex(resume.getUuid()) == -1) {
+        if (findIndex(resume.getUuid()) == -1) {
             if (size < ARRAY_LENGTH) {
                 storage[size] = resume;
                 size++;
-                System.out.println("Resume saved");
+                System.out.println("Resume: " + resume.getUuid() +" saved");
             } else {
-                System.out.println("Resume not saved - too many resumes in array");
+                System.out.println("Resume: " + resume.getUuid() +" not saved - too many resumes in array");
             }
         } else {
-            System.out.println("Resume not saved");
+            System.out.println("Resume: " + resume.getUuid() +" not saved");
         }
     }
 
     public Resume get(String uuid) {
-        if (findArrayIndex(uuid) != -1) {
-            System.out.println("Resume received");
-            return storage[index];
+        if (findIndex(uuid) != -1) {
+            System.out.println("Resume: " + uuid +" received");
+            return storage[findIndex(uuid)];
         } else {
-            System.out.println("Resume not received");
+            System.out.println("Resume: " + uuid +" not received");
             return null;
         }
     }
 
     public void delete(String uuid) {
-        if (findArrayIndex(uuid) != -1) {
-            storage[index] = storage[size - 1];
-            storage[size - 1] = null;
+        if (findIndex(uuid) != -1) {
             size--;
-            System.out.println("Resume deleted");
+            storage[findIndex(uuid)] = storage[size];
+            storage[size] = null;
+            System.out.println("Resume: " + uuid +" deleted");
         } else {
-            System.out.println("Resume not deleted");
+            System.out.println("Resume: " + uuid +" not deleted");
         }
     }
 
-    private int findArrayIndex(String uuid) {
+    private int findIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                index = i;
-                return index;
+                return i;
             }
         }
         return -1;
