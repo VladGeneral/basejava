@@ -14,4 +14,16 @@ public abstract class AbstractArrayStorage implements Storage {
         return size;
     }
 
+    public Resume get(String uuid) {
+        int index = findIndex(uuid);
+        if (index != -1) {
+            System.out.println("Resume: " + uuid + " received");
+            return storage[index];
+        } else {
+            System.out.println("Resume: " + uuid + " not received");
+            return null;
+        }
+    }
+
+    protected abstract int findIndex(String uuid);
 }
