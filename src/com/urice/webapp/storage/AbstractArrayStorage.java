@@ -20,7 +20,6 @@ public abstract class AbstractArrayStorage implements Storage {
         } else {
             System.out.println("Resume: " + resume.getUuid() + " not updated");
         }
-        resumeSort();
     }
 
     public void clear() {
@@ -31,18 +30,22 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public void save(Resume resume) {
         int index = findIndex(resume.getUuid());
-        if (index < 0) {
-            if (size < STORAGE_LIMIT) {
+        if (size < STORAGE_LIMIT) {
+            if (index == -1) {
                 storage[size] = resume;
                 size++;
-                // System.out.println("Resume: " + resume.getUuid() + " saved");
+                System.out.println("Resume: " + resume.getUuid() + " saved");
+            } else if (index < -1) {
+                resumeSort(resume, index);
+                size++;
+                System.out.println("Resume: " + resume.getUuid() + " saved");
             } else {
-                // System.out.println("Resume: " + resume.getUuid() + " not saved - too many resumes in array");
+                System.out.println("Resume: " + resume.getUuid() + " not saved");
             }
         } else {
-            // System.out.println("Resume: " + resume.getUuid() + " not saved");
+            System.out.println("Resume: " + resume.getUuid() + " not saved - too many resumes in array");
         }
-        resumeSort();
+
     }
 
     public Resume get(String uuid) {
@@ -62,11 +65,11 @@ public abstract class AbstractArrayStorage implements Storage {
             size--;
             storage[index] = storage[size];
             storage[size] = null;
+            resumeDelete(index);
             System.out.println("Resume: " + uuid + " deleted");
         } else {
             System.out.println("Resume: " + uuid + " not deleted");
         }
-        resumeSort();
     }
 
     public int size() {
@@ -82,5 +85,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     protected abstract int findIndex(String uuid);
 
-    protected abstract void resumeSort();
+    protected abstract Resume[] resumeSort(Resume resume, int binaryIndex);
+
+    protected abstract Resume[] resumeDelete(int binaryIndex);
 }

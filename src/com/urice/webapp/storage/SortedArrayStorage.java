@@ -17,15 +17,21 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void resumeSort() {
-        for (int j = 0; j < size; j++) {
-            for (int i = j + 1; i < size; i++) {
-                if (storage[i].compareTo(storage[j]) < 0) {
-                    String uuid = storage[j].getUuid();
-                    storage[j].setUuid(storage[i].getUuid());
-                    storage[i].setUuid(uuid);
-                }
-            }
+    protected Resume[] resumeSort(Resume resume, int binaryIndex) {
+        int index = -binaryIndex - 1;
+        storage[index + 1] = storage[index];
+        storage[index] = resume;
+        return Arrays.copyOfRange(storage, 0, size);
+    }
+
+    @Override
+    protected Resume[] resumeDelete(int binaryIndex) {
+        Resume storageKey;
+        for (int i = binaryIndex; i < size - 1; i++) {
+            storageKey = storage[i + 1];
+            storage[i + 1] = storage[i];
+            storage[i] = storageKey;
         }
+        return Arrays.copyOfRange(storage, 0, size);
     }
 }
