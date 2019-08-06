@@ -38,11 +38,14 @@ public class MainTestArrayStorage {
 
         System.out.println("Size: " + ARRAY_STORAGE.size());
 
-//        ARRAY_STORAGE.save(r1);
-//        System.out.println("Get r1: " + ARRAY_STORAGE.get(r1.getUuid()));
-//        r1.setUuid("ss");
-//        System.out.println("Get r1: " + ARRAY_STORAGE.get(r1.getUuid()));
-//        ARRAY_STORAGE.update(r1);
+        ARRAY_STORAGE.save(r1);
+        ARRAY_STORAGE.save(r2);
+        ARRAY_STORAGE.save(r3);
+        System.out.println("Get r1: " + ARRAY_STORAGE.get(r2.getUuid()));
+        r2.setUuid("ss");
+        System.out.println("Get r1: " + ARRAY_STORAGE.get(r2.getUuid()));
+        ARRAY_STORAGE.update(r2);
+        printAll();
     }
 
     static void printAll() {
