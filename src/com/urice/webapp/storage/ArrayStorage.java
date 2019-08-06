@@ -18,13 +18,13 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void resumeSaveElement(Resume resume, int notBinaryIndex) {
+    protected void insertElement(Resume resume, int insertIndex) {
         storage[size] = resume;
     }
 
     @Override
-    protected void resumeDeleteElement(int notBinaryIndex) {
-        storage[notBinaryIndex] = storage[size];
+    protected void deleteElement(int deleteIndex) {
+        storage[deleteIndex] = storage[size];
         storage[size] = null;
     }
 
