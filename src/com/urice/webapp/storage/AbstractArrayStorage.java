@@ -1,5 +1,8 @@
 package com.urice.webapp.storage;
 
+import com.urice.webapp.exception.ExistStorageException;
+import com.urice.webapp.exception.NotExistStorageException;
+import com.urice.webapp.exception.StorageException;
 import com.urice.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -18,7 +21,7 @@ public abstract class AbstractArrayStorage implements Storage {
             storage[index] = resume;
             System.out.println("Resume: " + resume.getUuid() + " updated");
         } else {
-            System.out.println("Resume: " + resume.getUuid() + " not saved - doesn't exist ");
+            throw new NotExistStorageException(resume.getUuid());
         }
     }
 
@@ -36,10 +39,10 @@ public abstract class AbstractArrayStorage implements Storage {
                 size++;
                 System.out.println("Resume: " + resume.getUuid() + " saved");
             } else {
-                System.out.println("Resume: " + resume.getUuid() + " not saved - already exist");
+                throw new ExistStorageException(resume.getUuid());
             }
         } else {
-            System.out.println("Resume: " + resume.getUuid() + " not saved - storage is full");
+            throw new StorageException("Storage overflow", resume.getUuid());
         }
 
     }
@@ -50,9 +53,7 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println("Resume: " + uuid + " received");
             return storage[index];
         }
-        System.out.println("Resume: " + uuid + " not received - doesn't exist");
-        return null;
-
+        throw new NotExistStorageException(uuid);
     }
 
     public void delete(String uuid) {
@@ -64,7 +65,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
             System.out.println("Resume: " + uuid + " deleted");
         } else {
-            System.out.println("Resume: " + uuid + " not deleted - doesn't exist");
+            throw new NotExistStorageException(uuid);
         }
     }
 
