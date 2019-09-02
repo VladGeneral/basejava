@@ -77,11 +77,10 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void getAll() {
+        Resume[] testResumes = {RESUME_1, RESUME_2, RESUME_3};
         Resume[] resumes = storage.getAll();
         assertSize(3);
-        assertEquals(RESUME_1, resumes[0]);
-        assertEquals(RESUME_2, resumes[1]);
-        assertEquals(RESUME_3, resumes[2]);
+        assertEquals(testResumes, resumes);
 
     }
 
@@ -106,11 +105,11 @@ public abstract class AbstractArrayStorageTest {
     @Test(expected = StorageException.class)
     public void getOverflow() {
         try {
-            for (int i = 4; i <= AbstractArrayStorage.STORAGE_LIMIT; i++) {
+            for (int i = storage.size(); i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
                 storage.save(new Resume());
             }
         } catch (StorageException e) {
-            fail();
+            fail("StorageException expected");
         }
         storage.save(new Resume());
     }
