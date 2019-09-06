@@ -53,7 +53,6 @@ public class MapStorage extends AbstractStorage {
         if (map.containsKey(uuid)) {
             return uuid;
         }
-        //не факт, надо тестить
-        return String.valueOf(-1);
+        return null;
     }
 }

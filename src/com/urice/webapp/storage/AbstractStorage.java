@@ -7,41 +7,41 @@ import com.urice.webapp.model.Resume;
 public abstract class AbstractStorage implements Storage {
 
     public void update(Resume resume) {
-        int searchKey = getExistSearchKey(resume.getUuid());
+        Object searchKey = getExistSearchKey(resume.getUuid());
         makeUpdate(searchKey, resume);
     }
 
     public void save(Resume resume) {
-        int searchKey = getNotExistSearchKey(resume.getUuid());
+        Object searchKey = getNotExistSearchKey(resume.getUuid());
         makeSave(searchKey, resume);
 
     }
 
     public Resume get(String uuid) {
-        int searchKey = getExistSearchKey(uuid);
+        Object searchKey = getExistSearchKey(uuid);
         return makeGet(searchKey);
 
     }
 
     public void delete(String uuid) {
-        int searchKey = getExistSearchKey(uuid);
+        Object searchKey = getExistSearchKey(uuid);
         makeDelete(searchKey);
     }
 
-    private int getExistSearchKey(String uuid) {
+    private Object getExistSearchKey(String uuid) {
         Object searchKey = findSearchKey(uuid);
-        if ((int) searchKey < 0) {
+        if (searchKey == null) {
             throw new NotExistStorageException(uuid);
         }
-        return (int) searchKey;
+        return searchKey;
     }
 
-    private int getNotExistSearchKey(String uuid) {
+    private Object getNotExistSearchKey(String uuid) {
         Object searchKey = findSearchKey(uuid);
-        if ((int) searchKey >= 0) {
+        if (searchKey != null) {
             throw new ExistStorageException(uuid);
         }
-        return (int) searchKey;
+        return searchKey;
     }
 
     protected abstract Object findSearchKey(String uuid);
@@ -53,6 +53,8 @@ public abstract class AbstractStorage implements Storage {
     protected abstract Resume makeGet(Object searchKey);
 
     protected abstract void makeDelete(Object searchKey);
+
+   // protected abstract boolean isNotNull(Object searchKey);
 
 
 }
