@@ -3,9 +3,10 @@ package com.urice.webapp.storage;
 import com.urice.webapp.model.Resume;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage {
-    ArrayList<Resume> list = new ArrayList<>();
+    private List<Resume> list = new ArrayList<>();
 
     @Override
     protected void makeSave(int searchKey, Resume resume) {
@@ -14,9 +15,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void makeUpdate(int searchKey, Resume resume) {
-        if (list.contains(resume)) {
             list.set(searchKey, resume);
-        }
     }
 
     @Override
@@ -46,7 +45,11 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected int findSearchKey(String uuid) {
-        Resume resume = new Resume(uuid);
-        return list.indexOf(resume);
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUuid().equals(uuid)){
+                return i;
+            }
+        }
+        return 0;
     }
 }
