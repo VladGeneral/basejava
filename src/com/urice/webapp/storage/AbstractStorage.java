@@ -6,30 +6,30 @@ import com.urice.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-
     public void update(Resume resume) {
-        int index = getExistSearchKey(resume.getUuid());
-        makeUpdate(index, resume);
+        int searchKey = getExistSearchKey(resume.getUuid());
+        makeUpdate(searchKey, resume);
     }
 
     public void save(Resume resume) {
-        int index = getNotExistSearchKey(resume.getUuid());
-        makeSave(index, resume);
+        int searchKey = getNotExistSearchKey(resume.getUuid());
+        makeSave(searchKey, resume);
 
     }
 
     public Resume get(String uuid) {
-        int index = getExistSearchKey(uuid);
-        makeGet(index, uuid);
+        int searchKey = getExistSearchKey(uuid);
+        return makeGet(searchKey);
+
     }
 
     public void delete(String uuid) {
-        int index = getExistSearchKey(uuid);
-        makeDelete(index, uuid);
+        int searchKey = getExistSearchKey(uuid);
+        makeDelete(searchKey);
     }
 
     private int getExistSearchKey(String uuid) {
-        int searchKey = findIndex(uuid);
+        int searchKey = findSearchKey(uuid);
         if (searchKey < 0) {
             throw new NotExistStorageException(uuid);
         }
@@ -37,22 +37,22 @@ public abstract class AbstractStorage implements Storage {
     }
 
     private int getNotExistSearchKey(String uuid) {
-        int searchKey = findIndex(uuid);
+        int searchKey = findSearchKey(uuid);
         if (searchKey >= 0) {
             throw new ExistStorageException(uuid);
         }
         return searchKey;
     }
 
-    protected abstract int findIndex(String uuid);
+    protected abstract int findSearchKey(String uuid);
 
-    protected abstract void makeSave(int index, Resume resume);
+    protected abstract void makeSave(int searchKey, Resume resume);
 
-    protected abstract void makeUpdate(int index, Resume resume);
+    protected abstract void makeUpdate(int searchKey, Resume resume);
 
-    protected abstract Resume makeGet(int index, String uuid);
+    protected abstract Resume makeGet(int searchKey);
 
-    protected abstract void makeDelete(int index, String uuid);
+    protected abstract void makeDelete(int searchKey);
 
 
 }
