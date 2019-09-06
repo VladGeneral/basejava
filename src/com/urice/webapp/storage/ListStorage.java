@@ -9,22 +9,22 @@ public class ListStorage extends AbstractStorage {
     private List<Resume> list = new ArrayList<>();
 
     @Override
-    protected void makeSave(int searchKey, Resume resume) {
+    protected void makeSave(Object searchKey, Resume resume) {
         list.add(resume);
     }
 
     @Override
-    protected void makeUpdate(int searchKey, Resume resume) {
-            list.set(searchKey, resume);
+    protected void makeUpdate(Object searchKey, Resume resume) {
+        list.set((Integer) searchKey, resume);
     }
 
     @Override
-    protected Resume makeGet(int searchKey) {
-        return list.get(searchKey);
+    protected Resume makeGet(Object searchKey) {
+        return list.get((Integer) searchKey);
     }
 
     @Override
-    protected void makeDelete(int searchKey) {
+    protected void makeDelete(Object searchKey) {
         list.remove(searchKey);
     }
 
@@ -44,12 +44,12 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected int findSearchKey(String uuid) {
+    protected Integer findSearchKey(String uuid) {
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getUuid().equals(uuid)){
+            if (list.get(i).getUuid().equals(uuid)) {
                 return i;
             }
         }
-        return 0;
+        return -1;
     }
 }

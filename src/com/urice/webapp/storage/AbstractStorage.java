@@ -29,30 +29,30 @@ public abstract class AbstractStorage implements Storage {
     }
 
     private int getExistSearchKey(String uuid) {
-        int searchKey = findSearchKey(uuid);
-        if (searchKey < 0) {
+        Object searchKey = findSearchKey(uuid);
+        if ((int) searchKey < 0) {
             throw new NotExistStorageException(uuid);
         }
-        return searchKey;
+        return (int) searchKey;
     }
 
     private int getNotExistSearchKey(String uuid) {
-        int searchKey = findSearchKey(uuid);
-        if (searchKey >= 0) {
+        Object searchKey = findSearchKey(uuid);
+        if ((int) searchKey >= 0) {
             throw new ExistStorageException(uuid);
         }
-        return searchKey;
+        return (int) searchKey;
     }
 
-    protected abstract int findSearchKey(String uuid);
+    protected abstract Object findSearchKey(String uuid);
 
-    protected abstract void makeSave(int searchKey, Resume resume);
+    protected abstract void makeSave(Object searchKey, Resume resume);
 
-    protected abstract void makeUpdate(int searchKey, Resume resume);
+    protected abstract void makeUpdate(Object searchKey, Resume resume);
 
-    protected abstract Resume makeGet(int searchKey);
+    protected abstract Resume makeGet(Object searchKey);
 
-    protected abstract void makeDelete(int searchKey);
+    protected abstract void makeDelete(Object searchKey);
 
 
 }
