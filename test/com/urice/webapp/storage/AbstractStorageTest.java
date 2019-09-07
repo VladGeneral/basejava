@@ -2,16 +2,15 @@ package com.urice.webapp.storage;
 
 import com.urice.webapp.exception.ExistStorageException;
 import com.urice.webapp.exception.NotExistStorageException;
-import com.urice.webapp.exception.StorageException;
 import com.urice.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
-public class AbstractStorageTest {
-    private Storage storage;
+public abstract class AbstractStorageTest {
+//    private static final Integer MAX_INTEGER_VALUE = Integer.MAX_VALUE;
+    protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
@@ -30,8 +29,7 @@ public class AbstractStorageTest {
         RESUME_4 = new Resume(UUID_4);
     }
 
-
-    protected AbstractStorageTest(Storage storage) {
+    public AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
@@ -72,9 +70,9 @@ public class AbstractStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void delete() {
-        storage.delete(RESUME_2.getUuid());
+        storage.delete(RESUME_1.getUuid());
         assertSize(2);
-        assertGet(RESUME_2);
+        storage.get(RESUME_1.getUuid());
     }
 
     @Test
@@ -109,15 +107,15 @@ public class AbstractStorageTest {
         storage.get("dummy");
     }
 
-    @Test(expected = StorageException.class)
-    public void getOverflow() {
-        try {
-            for (int i = storage.size(); i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-                storage.save(new Resume());
-            }
-        } catch (StorageException e) {
-            fail("StorageException expected");
-        }
-        storage.save(new Resume());
-    }
+//    @Test(expected = StorageException.class)
+//    public void getOverflow() {
+//        try {
+//            for (int i = storage.size(); i < AbstractStorageTest.MAX_INTEGER_VALUE; i++) {
+//                storage.save(new Resume());
+//            }
+//        } catch (StorageException e) {
+//            fail("StorageException expected");
+//        }
+//        storage.save(new Resume());
+//    }
 }
