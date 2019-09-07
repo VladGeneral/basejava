@@ -6,10 +6,14 @@ import com.urice.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
-//    private static final Integer MAX_INTEGER_VALUE = Integer.MAX_VALUE;
+    //    private static final Integer MAX_INTEGER_VALUE = Integer.MAX_VALUE;
     protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -83,10 +87,10 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAll() {
         Resume[] testResumes = {RESUME_1, RESUME_2, RESUME_3};
-        Resume[] resumes = storage.getAll();
+        List<Resume> resumes = Arrays.asList(storage.getAll());
+        Collections.sort(resumes);
         assertSize(3);
-        assertEquals(testResumes, resumes);
-
+        assertEquals(Arrays.asList(testResumes), resumes);
     }
 
     private void assertGet(Resume resume) {
@@ -107,15 +111,4 @@ public abstract class AbstractStorageTest {
         storage.get("dummy");
     }
 
-//    @Test(expected = StorageException.class)
-//    public void getOverflow() {
-//        try {
-//            for (int i = storage.size(); i < AbstractStorageTest.MAX_INTEGER_VALUE; i++) {
-//                storage.save(new Resume());
-//            }
-//        } catch (StorageException e) {
-//            fail("StorageException expected");
-//        }
-//        storage.save(new Resume());
-//    }
 }

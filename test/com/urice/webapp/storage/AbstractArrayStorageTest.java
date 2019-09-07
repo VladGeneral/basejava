@@ -6,10 +6,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.fail;
 
-public class AbstractArrayStorageTest extends AbstractStorageTest{
+public class AbstractArrayStorageTest extends AbstractStorageTest {
     public AbstractArrayStorageTest(Storage storage) {
         super(storage);
     }
+
     @Test(expected = StorageException.class)
     public void getOverflow() {
         try {

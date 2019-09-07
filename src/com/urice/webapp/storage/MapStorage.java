@@ -10,7 +10,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void makeSave(Object searchKey, Resume resume) {
-        map.put((String) searchKey, resume);
+        map.put(resume.getUuid(), resume);
 
     }
 
@@ -34,7 +34,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isNotNull(Integer searchKey) {
+    protected boolean isNotNull(Object searchKey) {
         return searchKey != null;
     }
 

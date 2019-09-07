@@ -29,7 +29,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isNotNull(Integer searchKey) {
+    protected boolean isNotNull(Object searchKey) {
         return searchKey != null;
     }
 
