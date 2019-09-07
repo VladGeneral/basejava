@@ -44,6 +44,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 //            System.out.println("Resume: " + uuid + " deleted");
     }
 
+    @Override
+    protected boolean isNotNull(Integer searchKey) {
+        return searchKey >= 0;
+    }
+
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;

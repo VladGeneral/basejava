@@ -14,7 +14,7 @@ public class ArrayStorage extends AbstractArrayStorage {
                 return i;
             }
         }
-        return null;
+        return -1;
     }
 
     @Override
