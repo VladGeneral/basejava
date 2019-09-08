@@ -50,10 +50,6 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected String findSearchKey(String uuid) {
-        Resume resume = map.get(uuid);
-        if (resume != null) {
-            return resume.getUuid();
-        }
-        return null;
+        return uuid;
     }
 }
