@@ -8,12 +8,12 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
-    //    private static final Integer MAX_INTEGER_VALUE = Integer.MAX_VALUE;
     protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -88,7 +88,7 @@ public abstract class AbstractStorageTest {
     public void getAll() {
         Resume[] testResumes = {RESUME_1, RESUME_2, RESUME_3};
         List<Resume> resumes = Arrays.asList(storage.getAll());
-        Collections.sort(resumes);
+        Collections.sort(resumes, Comparator.comparing(Resume::getUuid));
         assertSize(3);
         assertEquals(Arrays.asList(testResumes), resumes);
     }
