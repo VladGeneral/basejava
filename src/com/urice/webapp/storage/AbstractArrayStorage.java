@@ -14,7 +14,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected int size;
 
     @Override
-    protected void makeSave(Object searchKey, Resume resume) {
+    protected void doSave(Object searchKey, Resume resume) {
         if (size < STORAGE_LIMIT) {
             insertElement(resume, (Integer) searchKey);
             size++;
@@ -25,19 +25,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void makeUpdate(Object searchKey, Resume resume) {
+    protected void doUpdate(Object searchKey, Resume resume) {
         storage[(int) searchKey] = resume;
 //            System.out.println("Resume: " + resume.getUuid() + " updated");
     }
 
     @Override
-    protected Resume makeGet(Object searchKey) {
+    protected Resume doGet(Object searchKey) {
 //            System.out.println("Resume: " + uuid + " received");
         return storage[(int) searchKey];
     }
 
     @Override
-    protected void makeDelete(Object searchKey) {
+    protected void doDelete(Object searchKey) {
         size--;
         deleteElement((Integer) searchKey);
         storage[size] = null;

@@ -9,22 +9,22 @@ public class MapStorage extends AbstractStorage {
     private Map<String, Resume> map = new HashMap<>();
 
     @Override
-    protected void makeSave(Object searchKey, Resume resume) {
+    protected void doSave(Object searchKey, Resume resume) {
         map.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected void makeUpdate(Object searchKey, Resume resume) {
+    protected void doUpdate(Object searchKey, Resume resume) {
         map.put((String) searchKey, resume);
     }
 
     @Override
-    protected Resume makeGet(Object searchKey) {
+    protected Resume doGet(Object searchKey) {
         return map.get(searchKey);
     }
 
     @Override
-    protected void makeDelete(Object searchKey) {
+    protected void doDelete(Object searchKey) {
         map.remove(searchKey);
     }
 
@@ -49,7 +49,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected String findSearchKey(String uuid) {
+    protected String getSearchKey(String uuid) {
         return uuid;
     }
 }

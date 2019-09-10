@@ -7,52 +7,52 @@ import com.urice.webapp.model.Resume;
 public abstract class AbstractStorage implements Storage {
 
     public void update(Resume resume) {
-        Object searchKey = getExistSearchKey(resume.getUuid());
-        makeUpdate(searchKey, resume);
+        Object searchKey = getExistedSearchKey(resume.getUuid());
+        doUpdate(searchKey, resume);
     }
 
     public void save(Resume resume) {
-        Object searchKey = getNotExistSearchKey(resume.getUuid());
-        makeSave(searchKey, resume);
+        Object searchKey = getNotExistedSearchKey(resume.getUuid());
+        doSave(searchKey, resume);
 
     }
 
     public Resume get(String uuid) {
-        Object searchKey = getExistSearchKey(uuid);
-        return makeGet(searchKey);
+        Object searchKey = getExistedSearchKey(uuid);
+        return doGet(searchKey);
 
     }
 
     public void delete(String uuid) {
-        Object searchKey = getExistSearchKey(uuid);
-        makeDelete(searchKey);
+        Object searchKey = getExistedSearchKey(uuid);
+        doDelete(searchKey);
     }
 
-    private Object getExistSearchKey(String uuid) {
-        Object searchKey = findSearchKey(uuid);
+    private Object getExistedSearchKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
             throw new NotExistStorageException(uuid);
         }
         return searchKey;
     }
 
-    private Object getNotExistSearchKey(String uuid) {
-        Object searchKey = findSearchKey(uuid);
+    private Object getNotExistedSearchKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
             throw new ExistStorageException(uuid);
         }
         return searchKey;
     }
 
-    protected abstract Object findSearchKey(String uuid);
+    protected abstract Object getSearchKey(String uuid);
 
-    protected abstract void makeSave(Object searchKey, Resume resume);
+    protected abstract void doSave(Object searchKey, Resume resume);
 
-    protected abstract void makeUpdate(Object searchKey, Resume resume);
+    protected abstract void doUpdate(Object searchKey, Resume resume);
 
-    protected abstract Resume makeGet(Object searchKey);
+    protected abstract Resume doGet(Object searchKey);
 
-    protected abstract void makeDelete(Object searchKey);
+    protected abstract void doDelete(Object searchKey);
 
     protected abstract boolean isExist(Object searchKey);
 
