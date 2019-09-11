@@ -5,7 +5,12 @@ import com.urice.webapp.model.Resume;
 import java.util.*;
 
 public class MapUuidStorage extends AbstractStorage {
-    private Map<String, Resume> map = new TreeMap<>();
+    private Map<String, Resume> map = new HashMap<>();
+
+    @Override
+    protected String getSearchKey(String uuid) {
+        return uuid;
+    }
 
     @Override
     protected void doSave(Object searchKey, Resume resume) {
@@ -39,16 +44,13 @@ public class MapUuidStorage extends AbstractStorage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return new ArrayList<>(map.values());
+        List<Resume> returnList = new ArrayList<>(map.values());
+        Collections.sort(returnList);
+        return returnList;
     }
 
     @Override
     public int size() {
         return map.size();
-    }
-
-    @Override
-    protected String getSearchKey(String uuid) {
-        return uuid;
     }
 }
