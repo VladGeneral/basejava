@@ -65,7 +65,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
      */
 
     public List<Resume> getAllSorted() {
-        return Arrays.asList(storage).subList(0,size());
+        return Arrays.asList(storage).subList(0, size());
     }
 
 //    protected abstract int findIndex(String uuid);
