@@ -87,7 +87,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAll() {
         Resume[] testResumes = {RESUME_1, RESUME_2, RESUME_3};
-        List<Resume> resumes = Arrays.asList(storage.getAll());
+        List<Resume> resumes = storage.getAllSorted();
         Collections.sort(resumes, Comparator.comparing(Resume::getUuid));
         assertSize(3);
         assertEquals(Arrays.asList(testResumes), resumes);
