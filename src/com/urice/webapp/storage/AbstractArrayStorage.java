@@ -15,47 +15,44 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected int size;
 
     @Override
-    protected void doSave(Object searchKey, Resume resume) {
+    protected void doSave(Object index, Resume resume) {
         if (size < STORAGE_LIMIT) {
-            insertElement(resume, (Integer) searchKey);
+            insertElement(resume, (Integer) index);
             size++;
-//            System.out.println("Resume: " + resume.getUuid() + " saved");
         } else {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
     }
 
     @Override
-    protected void doUpdate(Object searchKey, Resume resume) {
-        storage[(int) searchKey] = resume;
-//            System.out.println("Resume: " + resume.getUuid() + " updated");
+    protected void doUpdate(Object index, Resume resume) {
+        storage[(int) index] = resume;
     }
 
     @Override
-    protected Resume doGet(Object searchKey) {
-//            System.out.println("Resume: " + uuid + " received");
-        return storage[(int) searchKey];
+    protected Resume doGet(Object index) {
+        return storage[(int) index];
     }
 
     @Override
-    protected void doDelete(Object searchKey) {
+    protected void doDelete(Object index) {
         size--;
-        deleteElement((Integer) searchKey);
+        deleteElement((Integer) index);
         storage[size] = null;
-//            System.out.println("Resume: " + uuid + " deleted");
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (Integer) searchKey >= 0;
+    protected boolean isExist(Object index) {
+        return (Integer) index >= 0;
     }
 
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
-//        System.out.println("Resume - All removed");
     }
 
+    @Override
     public int size() {
         return size;
     }
@@ -64,11 +61,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
      * @return array, contains only Resumes in storage (without null)
      */
 
-    public List<Resume> getAllSorted() {
+    @Override
+    protected List<Resume> doGetAll() {
         return Arrays.asList(storage).subList(0, size());
     }
-
-//    protected abstract int findIndex(String uuid);
 
     protected abstract void insertElement(Resume resume, int insertIndex);
 

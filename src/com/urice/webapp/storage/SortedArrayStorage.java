@@ -9,12 +9,11 @@ import java.util.Comparator;
  * Array based storage for Resumes
  */
 public class SortedArrayStorage extends AbstractArrayStorage {
-//    private static final Comparator<Resume> RESUME_COMPARATOR = (resume, t1) -> resume.getUuid().compareTo(t1.getUuid());
     private static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getUuid);
 
     @Override
     protected Integer getSearchKey(String uuid) {
-        Resume searchKey = new Resume(uuid,"haltura");
+        Resume searchKey = new Resume(uuid, "haltura");
         return Arrays.binarySearch(storage, 0, size, searchKey, RESUME_COMPARATOR);
     }
 

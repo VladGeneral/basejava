@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
-    //private static final Comparator<Resume> UUID_COMPARATOR = Comparator.comparing(Resume::getUuid);
     private List<Resume> list = new ArrayList<>();
 
     @Override
@@ -41,13 +40,6 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> returnList = list;
-        Collections.sort(list);
-        return returnList;
-    }
-
-    @Override
     public int size() {
         return list.size();
     }
@@ -60,5 +52,12 @@ public class ListStorage extends AbstractStorage {
             }
         }
         return null;
+    }
+
+    @Override
+    protected List<Resume> doGetAll() {
+        List<Resume> returnList = list;
+        Collections.sort(list);
+        return returnList;
     }
 }
