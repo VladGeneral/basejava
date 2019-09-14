@@ -63,7 +63,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected List<Resume> doGetAll() {
-        return Arrays.asList(storage).subList(0, size());
+        return Arrays.asList(Arrays.copyOf(storage,size));
     }
 
     protected abstract void insertElement(Resume resume, int insertIndex);

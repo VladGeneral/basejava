@@ -3,7 +3,6 @@ package com.urice.webapp.storage;
 import com.urice.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
@@ -56,8 +55,6 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected List<Resume> doGetAll() {
-        List<Resume> returnList = list;
-        Collections.sort(list);
-        return returnList;
+        return list;
     }
 }
