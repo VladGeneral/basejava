@@ -29,12 +29,12 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected void doDelete(Object resume) {
-        map.remove(resume);
+        map.values().remove(resume);
     }
 
     @Override
     protected boolean isExist(Object resume) {
-        return map.containsKey(resume);
+        return map.containsValue(resume);
     }
 
     @Override
