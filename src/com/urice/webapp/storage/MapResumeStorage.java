@@ -29,7 +29,7 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected void doDelete(Object resume) {
-        map.values().remove(resume);
+        map.remove(((Resume) resume).getUuid());
     }
 
     @Override
