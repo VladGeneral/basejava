@@ -52,7 +52,7 @@ public abstract class AbstractStorage implements Storage {
     }
 
     public List<Resume> getAllSorted() {
-        List<Resume> list = doGetAll();
+        List<Resume> list = doCopyAll();
         Collections.sort(list);
         return list;
     }
@@ -67,7 +67,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract void doDelete(Object searchKey);
 
-    protected abstract List<Resume> doGetAll();
+    protected abstract List<Resume> doCopyAll();
 
     protected abstract boolean isExist(Object searchKey);
 
