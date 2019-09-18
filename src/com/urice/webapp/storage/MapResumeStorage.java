@@ -4,7 +4,7 @@ import com.urice.webapp.model.Resume;
 
 import java.util.*;
 
-public class MapResumeStorage extends AbstractStorage {
+public class MapResumeStorage extends AbstractStorage<Resume> {
     private Map<String, Resume> map = new HashMap<>();
 
     @Override
@@ -13,27 +13,27 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doSave(Object searchResume, Resume resume) {
+    protected void doSave(Resume searchResume, Resume resume) {
         map.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected void doUpdate(Object searchResume, Resume resume) {
+    protected void doUpdate(Resume searchResume, Resume resume) {
         map.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected Resume doGet(Object searchResume) {
-        return (Resume) searchResume;
+    protected Resume doGet(Resume searchResume) {
+        return searchResume;
     }
 
     @Override
-    protected void doDelete(Object searchResume) {
-        map.remove(((Resume) searchResume).getUuid());
+    protected void doDelete(Resume searchResume) {
+        map.remove((searchResume).getUuid());
     }
 
     @Override
-    protected boolean isExist(Object searchResume) {
+    protected boolean isExist(Resume searchResume) {
         return searchResume != null;
     }
 
