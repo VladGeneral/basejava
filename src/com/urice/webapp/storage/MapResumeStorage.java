@@ -34,7 +34,7 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(Object resume) {
-        return map.containsValue(resume);
+        return resume != null;
     }
 
     @Override
