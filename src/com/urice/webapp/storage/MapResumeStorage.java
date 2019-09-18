@@ -38,6 +38,11 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
+    protected List<Resume> doCopyAll() {
+        return new ArrayList<>(map.values());
+    }
+
+    @Override
     public void clear() {
         map.clear();
     }
@@ -45,10 +50,5 @@ public class MapResumeStorage extends AbstractStorage {
     @Override
     public int size() {
         return map.size();
-    }
-
-    @Override
-    protected List<Resume> doCopyAll() {
-        return new ArrayList<>(map.values());
     }
 }

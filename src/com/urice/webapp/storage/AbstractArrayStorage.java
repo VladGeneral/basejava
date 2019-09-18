@@ -47,6 +47,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
+    protected List<Resume> doCopyAll() {
+        return Arrays.asList(Arrays.copyOf(storage, size));
+    }
+
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
@@ -55,11 +60,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     public int size() {
         return size;
-    }
-
-    @Override
-    protected List<Resume> doCopyAll() {
-        return Arrays.asList(Arrays.copyOf(storage,size));
     }
 
     protected abstract void insertElement(Resume resume, int insertIndex);
