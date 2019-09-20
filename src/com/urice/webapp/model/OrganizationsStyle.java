@@ -2,7 +2,7 @@ package com.urice.webapp.model;
 
 import java.time.LocalDate;
 
-public class Complicate {
+public class OrganizationsStyle {
 
     private final String organizationName;
     private final LocalDate dateBeginningWork;
@@ -10,7 +10,7 @@ public class Complicate {
     private final String objective;  //position
     private final String descriptionOfWork;
 
-    public Complicate(String organizationName, LocalDate dateBeginningWork, LocalDate dateEndingWork, String objective, String descriptionOfWork) {
+    public OrganizationsStyle(String organizationName, LocalDate dateBeginningWork, LocalDate dateEndingWork, String objective, String descriptionOfWork) {
         this.organizationName = organizationName;
         this.dateBeginningWork = dateBeginningWork;
         this.dateEndingWork = dateEndingWork;
