@@ -1,5 +1,7 @@
 package com.urice.webapp.model;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -11,6 +13,9 @@ public class Resume implements Comparable<Resume> {
     // Unique identifier
     private final String uuid;
     private final String fullName;
+
+    private Map<ContactType, String> contactMap = new HashMap<>();
+    private Map<SectionType, Section> sectionMap = new HashMap<>();
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -29,6 +34,30 @@ public class Resume implements Comparable<Resume> {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public Map<ContactType, String> getContactMap() {
+        return contactMap;
+    }
+
+    public String getContactMap(ContactType contactType) {
+        return contactMap.get(contactType);
+    }
+
+    public Map<SectionType, Section> getSectionMap() {
+        return sectionMap;
+    }
+
+    public Section getSectionMap(SectionType sectionType) {
+        return sectionMap.get(sectionType);
+    }
+
+    public void setContactMap(ContactType contactType, String value) {
+        contactMap.put(contactType, value);
+    }
+
+    public void setSectionMap(SectionType sectionType, Section value) {
+        sectionMap.put(sectionType, value);
     }
 
     @Override
