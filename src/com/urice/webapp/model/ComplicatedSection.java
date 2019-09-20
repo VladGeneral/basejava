@@ -2,14 +2,14 @@ package com.urice.webapp.model;
 
 import java.util.List;
 
-public class ListSection extends Section {
-   private final List<String> data;
+public class ComplicatedSection extends Section {
+    private final List<Complicate> data;
 
-    public ListSection(List<String> data) {
+    public ComplicatedSection(List<Complicate> data) {
         this.data = data;
     }
 
-    public List<String> getData() {
+    public List<Complicate> getData() {
         return data;
     }
 
