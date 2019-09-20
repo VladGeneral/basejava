@@ -1,24 +1,15 @@
 package com.urice.webapp.model;
 
-import java.util.Date;
+import java.util.List;
 
 public class OrganizationSection extends Section {
-    private final List<OrganizationSection>
+    private final List<Organization> list;
 
-    private final String organizationName;
-    private final Date dateBeginningWork;
-    private final Date dateEndingWork;
-    private final String position;
-    private final String descriptionOfWork;
-
-
-    public OrganizationSection(String organizationName, Date dateBeginningWork, Date dateEndingWork, String position, String descriptionOfWork) {
-        this.organizationName = organizationName;
-        this.dateBeginningWork = dateBeginningWork;
-        this.dateEndingWork = dateEndingWork;
-        this.position = position;
-        this.descriptionOfWork = descriptionOfWork;
+    public OrganizationSection(List<Organization> list) {
+        this.list = list;
     }
 
-
+    public List<Organization> getList() {
+        return list;
+    }
 }

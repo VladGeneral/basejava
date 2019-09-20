@@ -36,17 +36,17 @@ public class Resume implements Comparable<Resume> {
         return fullName;
     }
 
-    public Map<ContactType, String> getContactMap() {
-        return contactMap;
-    }
+//    public Map<ContactType, String> getContactMap() {
+//        return contactMap;
+//    }
 
     public String getContactMap(ContactType contactType) {
         return contactMap.get(contactType);
     }
 
-    public Map<SectionType, Section> getSectionMap() {
-        return sectionMap;
-    }
+//    public Map<SectionType, Section> getSectionMap() {
+//        return sectionMap;
+//    }
 
     public Section getSectionMap(SectionType sectionType) {
         return sectionMap.get(sectionType);
