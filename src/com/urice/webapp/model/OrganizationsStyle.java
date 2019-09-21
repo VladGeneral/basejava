@@ -1,17 +1,19 @@
 package com.urice.webapp.model;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 
 public class OrganizationsStyle {
 
     private final String organizationName;
-    private final LocalDate dateBeginningWork;
-    private final LocalDate dateEndingWork;
+    private final String organizationURL;
+    private final YearMonth dateBeginningWork;
+    private final YearMonth dateEndingWork;
     private final String objective;  //position
     private final String descriptionOfWork;
 
-    public OrganizationsStyle(String organizationName, LocalDate dateBeginningWork, LocalDate dateEndingWork, String objective, String descriptionOfWork) {
+    public OrganizationsStyle(String organizationName, String organizationURL, YearMonth dateBeginningWork, YearMonth dateEndingWork, String objective, String descriptionOfWork) {
         this.organizationName = organizationName;
+        this.organizationURL = organizationURL;
         this.dateBeginningWork = dateBeginningWork;
         this.dateEndingWork = dateEndingWork;
         this.objective = objective;
@@ -21,6 +23,6 @@ public class OrganizationsStyle {
 
     @Override
     public String toString() {
-        return organizationName + " " + dateBeginningWork + " " + dateEndingWork + " " + objective + " " + descriptionOfWork;
+        return organizationName + " - " + organizationURL + " " + dateBeginningWork + "/" + dateEndingWork + " " + objective + " " + descriptionOfWork;
     }
 }
