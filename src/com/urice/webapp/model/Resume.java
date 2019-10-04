@@ -1,9 +1,6 @@
 package com.urice.webapp.model;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -14,8 +11,8 @@ public class Resume implements Comparable<Resume> {
     private final String uuid;
     private final String fullName;
 
-    private Map<ContactType, String> contactMap = new HashMap<>();
-    private Map<SectionType, Section> sectionMap = new HashMap<>();
+    private Map<ContactType, String> contactMap = new EnumMap<>(ContactType.class);
+    private Map<SectionType, AbstractSection> sectionMap = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -36,19 +33,11 @@ public class Resume implements Comparable<Resume> {
         return fullName;
     }
 
-//    public Map<ContactType, String> getContactMap() {
-//        return contactMap;
-//    }
-
     public String getContactMap(ContactType contactType) {
         return contactMap.get(contactType);
     }
 
-//    public Map<SectionType, Section> getSectionMap() {
-//        return sectionMap;
-//    }
-
-    public Section getSectionMap(SectionType sectionType) {
+    public AbstractSection getSectionMap(SectionType sectionType) {
         return sectionMap.get(sectionType);
     }
 
@@ -56,7 +45,7 @@ public class Resume implements Comparable<Resume> {
         contactMap.put(contactType, value);
     }
 
-    public void setSectionMap(SectionType sectionType, Section value) {
+    public void setSectionMap(SectionType sectionType, AbstractSection value) {
         sectionMap.put(sectionType, value);
     }
 
@@ -68,13 +57,17 @@ public class Resume implements Comparable<Resume> {
         Resume resume = (Resume) o;
 
         if (!uuid.equals(resume.uuid)) return false;
-        return fullName.equals(resume.fullName);
+        if (!fullName.equals(resume.fullName)) return false;
+        if (!contactMap.equals(resume.contactMap)) return false;
+        return sectionMap.equals(resume.sectionMap);
     }
 
     @Override
     public int hashCode() {
         int result = uuid.hashCode();
         result = 31 * result + fullName.hashCode();
+        result = 31 * result + contactMap.hashCode();
+        result = 31 * result + sectionMap.hashCode();
         return result;
     }
 

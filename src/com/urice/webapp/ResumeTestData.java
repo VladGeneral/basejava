@@ -40,9 +40,9 @@ public class ResumeTestData {
                 "администрирование Hudson/Jenkins, Ant + custom task, SoapUI, JPublisher, Flyway, Nagios, iReport, OpenCmis, Bonita, pgBouncer.",
                 "Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования",
                 "Родной русский, английский \"upper intermediate\""));
-        resume.setSectionMap(SectionType.EXPERIENCE,new OrganizationsSection(new OrganizationsStyle("Java Online Projects","www.Javaops.ru", YearMonth.of(2013,10), YearMonth.now(),"Автор проекта.","Создание, организация и проведение Java онлайн проектов и стажировок."),
-                new OrganizationsStyle("Wrike","www.wrike.com",YearMonth.of(2014,10), YearMonth.of(2016,1),"Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.") ));
-        resume.setSectionMap(SectionType.EDUCATION,new OrganizationsSection(new OrganizationsStyle("Coursera","www.coursera.org",YearMonth.of(2013,3),YearMonth.of(2013,5),"\"Functional Programming Principles in Scala\" by Martin Odersky",null)));
+        resume.setSectionMap(SectionType.EXPERIENCE,new OrganizationSection(new Organization("Java Online Projects","www.Javaops.ru", YearMonth.of(2013,10), YearMonth.now(),"Автор проекта.","Создание, организация и проведение Java онлайн проектов и стажировок."),
+                new Organization("Wrike","www.wrike.com",YearMonth.of(2014,10), YearMonth.of(2016,1),"Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.") ));
+        resume.setSectionMap(SectionType.EDUCATION,new OrganizationSection(new Organization("Coursera","www.coursera.org",YearMonth.of(2013,3),YearMonth.of(2013,5),"\"Functional Programming Principles in Scala\" by Martin Odersky",null)));
 
         for (ContactType type : ContactType.values()){
             System.out.println(type.getTitle() + ": " + resume.getContactMap(type));

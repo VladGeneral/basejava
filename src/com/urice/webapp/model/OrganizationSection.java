@@ -3,18 +3,18 @@ package com.urice.webapp.model;
 import java.util.Arrays;
 import java.util.List;
 
-public class ListSection extends AbstractSection {
-    private final List<String> data;
+public class OrganizationSection extends AbstractSection {
+    private final List<Organization> data;
 
-    public ListSection(String... data) {
+    public OrganizationSection(Organization... data) {
         this.data = Arrays.asList(data);
     }
 
-    public ListSection(List<String> data) {
+    public OrganizationSection(List<Organization> data) {
         this.data = data;
     }
 
-    public List<String> getData() {
+    public List<Organization> getData() {
         return data;
     }
 
@@ -28,7 +28,7 @@ public class ListSection extends AbstractSection {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ListSection that = (ListSection) o;
+        OrganizationSection that = (OrganizationSection) o;
 
         return data.equals(that.data);
     }
