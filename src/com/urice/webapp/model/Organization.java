@@ -1,28 +1,27 @@
 package com.urice.webapp.model;
 
 import java.time.YearMonth;
+import java.util.Objects;
 
 public class Organization {
 
-    private final String name;
-    private final String url;
+    private final Link homePage;
     private final YearMonth startDate;
     private final YearMonth endDate;
     private final String position;
     private final String description;
 
     public Organization(String name, String url, YearMonth startDate, YearMonth endDate, String position, String description) {
-        this.name = name;
-        this.url = url;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.position = position;
+        this.homePage = new Link(name, url);
+        this.startDate = Objects.requireNonNull(startDate, "startDate must not be null");
+        this.endDate = Objects.requireNonNull(endDate, "endDate must not be null");
+        this.position = Objects.requireNonNull(position, "position must not be null");
         this.description = description;
     }
 
     @Override
     public String toString() {
-        return name + " - " + url + " " + startDate + "/" + endDate + " " + position + " " + description;
+        return homePage + " " + startDate + "/" + endDate + " " + position + " " + description;
     }
 
     @Override
@@ -32,22 +31,20 @@ public class Organization {
 
         Organization that = (Organization) o;
 
-        if (!name.equals(that.name)) return false;
-        if (!url.equals(that.url)) return false;
+        if (!homePage.equals(that.homePage)) return false;
         if (!startDate.equals(that.startDate)) return false;
         if (!endDate.equals(that.endDate)) return false;
         if (!position.equals(that.position)) return false;
-        return description.equals(that.description);
+        return description != null ? description.equals(that.description) : that.description == null;
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + url.hashCode();
+        int result = homePage.hashCode();
         result = 31 * result + startDate.hashCode();
         result = 31 * result + endDate.hashCode();
         result = 31 * result + position.hashCode();
-        result = 31 * result + description.hashCode();
+        result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }
 }

@@ -1,19 +1,21 @@
 package com.urice.webapp.model;
 
-public class TextSection extends AbstractSection {
-        private final String data;
+import java.util.Objects;
 
-    public TextSection(String data) {
-        this.data = data;
+public class TextSection extends AbstractSection {
+    private final String content;
+
+    public TextSection(String content) {
+        this.content = Objects.requireNonNull(content, "content must ot be null");
     }
 
-    public String getData() {
-        return data;
+    public String getContent() {
+        return content;
     }
 
     @Override
     public String toString() {
-        return data;
+        return content;
     }
 
     @Override
@@ -23,11 +25,11 @@ public class TextSection extends AbstractSection {
 
         TextSection that = (TextSection) o;
 
-        return data.equals(that.data);
+        return content.equals(that.content);
     }
 
     @Override
     public int hashCode() {
-        return data.hashCode();
+        return content.hashCode();
     }
 }
