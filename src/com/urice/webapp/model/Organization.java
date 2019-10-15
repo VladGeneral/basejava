@@ -1,27 +1,21 @@
 package com.urice.webapp.model;
 
-import java.time.YearMonth;
-import java.util.Objects;
+import java.util.Arrays;
+import java.util.List;
 
 public class Organization {
 
     private final Link homePage;
-    private final YearMonth startDate;
-    private final YearMonth endDate;
-    private final String position;
-    private final String description;
+    private final List<Position> positions;
 
-    public Organization(String name, String url, YearMonth startDate, YearMonth endDate, String position, String description) {
+    public Organization(String name, String url, Position... positions) {
         this.homePage = new Link(name, url);
-        this.startDate = Objects.requireNonNull(startDate, "startDate must not be null");
-        this.endDate = Objects.requireNonNull(endDate, "endDate must not be null");
-        this.position = Objects.requireNonNull(position, "position must not be null");
-        this.description = description;
+        this.positions = Arrays.asList(positions);
     }
 
     @Override
     public String toString() {
-        return homePage + " " + startDate + "/" + endDate + " " + position + " " + description;
+        return homePage + " " + positions;
     }
 
     @Override
@@ -32,19 +26,13 @@ public class Organization {
         Organization that = (Organization) o;
 
         if (!homePage.equals(that.homePage)) return false;
-        if (!startDate.equals(that.startDate)) return false;
-        if (!endDate.equals(that.endDate)) return false;
-        if (!position.equals(that.position)) return false;
-        return description != null ? description.equals(that.description) : that.description == null;
+        return positions.equals(that.positions);
     }
 
     @Override
     public int hashCode() {
         int result = homePage.hashCode();
-        result = 31 * result + startDate.hashCode();
-        result = 31 * result + endDate.hashCode();
-        result = 31 * result + position.hashCode();
-        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + positions.hashCode();
         return result;
     }
 }
