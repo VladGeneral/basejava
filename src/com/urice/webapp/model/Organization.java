@@ -8,8 +8,8 @@ public class Organization {
     private final Link homePage;
     private final List<Position> positions;
 
-    public Organization(String name, String url, Position... positions) {
-        this.homePage = new Link(name, url);
+    public Organization(Link homePage, Position... positions) {
+        this.homePage = homePage;
         this.positions = Arrays.asList(positions);
     }
 

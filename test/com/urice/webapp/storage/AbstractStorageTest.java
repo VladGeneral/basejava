@@ -47,7 +47,6 @@ public abstract class AbstractStorageTest {
                 "Реализация c нуля Rich Internet Application приложения на стеке технологий JPA, Spring, Spring-MVC",
                 "Создание JavaEE фреймворка для отказоустойчивого взаимодействия слабо-связанных сервисов (SOA-base архитектура, JAX-WS, JMS, AS Glassfish).",
                 "Реализация протоколов по приему платежей всех основных платежных системы России (Cyberplat, Eport, Chronopay, Сбербанк), Белоруcсии(Erip, Osmp) и Никарагуа."));
-
         RESUME_1.setSectionMap(SectionType.QUALIFICATIONS, new ListSection("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2",
                 "Version control: Subversion, Git, Mercury, ClearCase, Perforce",
                 "DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,",
@@ -63,12 +62,10 @@ public abstract class AbstractStorageTest {
                 "администрирование Hudson/Jenkins, Ant + custom task, SoapUI, JPublisher.",
                 "Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования.",
                 "Родной русский, английский \"upper intermediate\""));
-
-        RESUME_1.setSectionMap(SectionType.EXPERIENCE, new OrganizationSection(new Organization("Java Online Projects", "www.Javaops.ru", new Position(YearMonth.of(2013, 10), YearMonth.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.")),
-                new Organization("Wrike", "www.wrike.com", new Position(YearMonth.of(2014, 10), YearMonth.of(2016, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike."))));
-        RESUME_1.setSectionMap(SectionType.EDUCATION, new OrganizationSection(new Organization("Coursera", "www.coursera.org", new Position(YearMonth.of(2013, 3), YearMonth.of(2013, 5), "\"Functional Programming Principles in Scala\" by Martin Odersky", null)),
-                new Organization("Санкт-Петербургский исследовательский университет", "www.spb.ru", new Position(YearMonth.of(1993, 9), YearMonth.of(1996, 7), "Аспирантура (программист С, С++)", null), new Position(YearMonth.of(1987, 9), YearMonth.of(1993, 7), "Инженер (программист Fortran, C)", null))));
-
+        RESUME_1.setSectionMap(SectionType.EXPERIENCE, new OrganizationSection(new Organization(new Link("Java Online Projects", "www.Javaops.ru"), new Position(YearMonth.of(2013, 10), YearMonth.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.")),
+                new Organization(new Link("Wrike", "www.wrike.com"), new Position(YearMonth.of(2014, 10), YearMonth.of(2016, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike."))));
+        RESUME_1.setSectionMap(SectionType.EDUCATION, new OrganizationSection(new Organization(new Link("Coursera", "www.coursera.org"), new Position(YearMonth.of(2013, 3), YearMonth.of(2013, 5), "\"Functional Programming Principles in Scala\" by Martin Odersky", null)),
+                new Organization(new Link("Санкт-Петербургский исследовательский университет", "www.spb.ru"), new Position(YearMonth.of(1993, 9), YearMonth.of(1996, 7), "Аспирантура (программист С, С++)", null), new Position(YearMonth.of(1987, 9), YearMonth.of(1993, 7), "Инженер (программист Fortran, C)", null))));
     }
 
     public AbstractStorageTest(Storage storage) {
