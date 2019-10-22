@@ -8,13 +8,11 @@ public class ListSection extends AbstractSection {
     private final List<String> data;
 
     public ListSection(String... data) {
-        Objects.requireNonNull(data, "items must ot be null");
-        this.data = Arrays.asList(data);
+        this.data = Objects.requireNonNull(Arrays.asList(data), " data must not be null");
     }
 
     public ListSection(List<String> data) {
-        Objects.requireNonNull(data, "items must ot be null");
-        this.data = data;
+        this.data = Objects.requireNonNull(data, "data must ot be null");
     }
 
     public List<String> getData() {

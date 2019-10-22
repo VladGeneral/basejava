@@ -3,10 +3,11 @@ package com.urice.webapp.storage;
 import com.urice.webapp.ResumeTestData;
 import com.urice.webapp.exception.ExistStorageException;
 import com.urice.webapp.exception.NotExistStorageException;
-import com.urice.webapp.model.Resume;
+import com.urice.webapp.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,10 +27,17 @@ public abstract class AbstractStorageTest {
     private static final Resume RESUME_4;
 
     static {
-        RESUME_1 = new Resume(UUID_1, "Name_1");
+        RESUME_1 = ResumeTestData.fillResume(UUID_1,"Name_1");
         RESUME_2 = new Resume(UUID_2, "Name_2");
         RESUME_3 = new Resume(UUID_3, "Name_3");
-        RESUME_4 = ResumeTestData.fillResume("uuid5", "TestResume");
+        RESUME_4 = new Resume(UUID_4, "Name_4");
+
+        RESUME_2.setContactMap(ContactType.SKYPE, "skype2");
+        RESUME_2.setContactMap(ContactType.MOBILE, "+2222233334567");
+        RESUME_2.setSectionMap(SectionType.EXPERIENCE,
+                new OrganizationSection(
+                        new Organization("Organization2", "http://Organization2.ru",
+                                new Organization.Position(2015, Month.JANUARY, "position1", "content1"))));
 
     }
 

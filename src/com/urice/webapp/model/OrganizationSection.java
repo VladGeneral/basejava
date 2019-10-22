@@ -8,13 +8,11 @@ public class OrganizationSection extends AbstractSection {
     private final List<Organization> data;
 
     public OrganizationSection(Organization... data) {
-        Objects.requireNonNull(data, "organizations must ot be null");
-        this.data = Arrays.asList(data);
+        this.data = Objects.requireNonNull(Arrays.asList(data), "organizations must ot be null");
     }
 
     public OrganizationSection(List<Organization> data) {
-        Objects.requireNonNull(data, "organizations must ot be null");
-        this.data = data;
+        this.data = Objects.requireNonNull(data, "organizations must ot be null");
     }
 
     public List<Organization> getData() {

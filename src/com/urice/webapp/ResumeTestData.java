@@ -7,16 +7,17 @@ import java.time.YearMonth;
 public class ResumeTestData {
 
     public static void main(String[] args) {
-//        for (ContactType type : ContactType.values()) {
-////            System.out.println(type.getTitle() + ": " + resume.getContactMap(type));
-////        }
-////
-////        for (SectionType type : SectionType.values()) {
-////            System.out.println(type.getTitle() + ": " + resume.getSectionMap(type));
-////        }
+        Resume resume = fillResume("uuidTest", "nameTest");
+        for (ContactType type : ContactType.values()) {
+            System.out.println(type.getTitle() + ": " + resume.getContactMap(type));
+        }
+
+        for (SectionType type : SectionType.values()) {
+            System.out.println(type.getTitle() + ": " + resume.getSectionMap(type));
+        }
     }
 
-    public static Resume fillResume(String uuid, String fullName){
+    public static Resume fillResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
 
         resume.setContactMap(ContactType.MOBILE, "89991236556");
@@ -50,10 +51,12 @@ public class ResumeTestData {
                 "администрирование Hudson/Jenkins, Ant + custom task, SoapUI, JPublisher.",
                 "Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования.",
                 "Родной русский, английский \"upper intermediate\""));
-        resume.setSectionMap(SectionType.EXPERIENCE, new OrganizationSection(new Organization(new Link("Java Online Projects", "www.Javaops.ru"), new Position(YearMonth.of(2013, 10), YearMonth.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.")),
-                new Organization(new Link("Wrike", "www.wrike.com"), new Position(YearMonth.of(2014, 10), YearMonth.of(2016, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike."))));
-        resume.setSectionMap(SectionType.EDUCATION, new OrganizationSection(new Organization(new Link("Coursera", "www.coursera.org"), new Position(YearMonth.of(2013, 3), YearMonth.of(2013, 5), "\"Functional Programming Principles in Scala\" by Martin Odersky", null)),
-                new Organization(new Link("Санкт-Петербургский исследовательский университет", "www.spb.ru"), new Position(YearMonth.of(1993, 9), YearMonth.of(1996, 7), "Аспирантура (программист С, С++)", null), new Position(YearMonth.of(1987, 9), YearMonth.of(1993, 7), "Инженер (программист Fortran, C)", null))));
+        resume.setSectionMap(SectionType.EXPERIENCE, new OrganizationSection(
+                new Organization( "Java Online Projects", "www.Javaops.ru", new Organization.Position(YearMonth.of(2013, 10), YearMonth.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.")),
+                new Organization("Wrike", "www.wrike.com", new Organization.Position(YearMonth.of(2014, 10), YearMonth.of(2016, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike."))));
+        resume.setSectionMap(SectionType.EDUCATION, new OrganizationSection(
+                new Organization("Coursera", "www.coursera.org", new Organization.Position(YearMonth.of(2013, 3), YearMonth.of(2013, 5), "\"Functional Programming Principles in Scala\" by Martin Odersky", null)),
+                new Organization("Санкт-Петербургский исследовательский университет", "www.spb.ru", new Organization.Position(YearMonth.of(1993, 9), YearMonth.of(1996, 7), "Аспирантура (программист С, С++)", null), new Organization.Position(YearMonth.of(1987, 9), YearMonth.of(1993, 7), "Инженер (программист Fortran, C)", null))));
         return resume;
     }
 }

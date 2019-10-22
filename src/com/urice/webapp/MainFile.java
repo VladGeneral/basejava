@@ -15,9 +15,10 @@ public class MainFile {
         File[] files = Objects.requireNonNull(directory.listFiles(), "directory must not be null");
         for (File file : files) {
             if (!file.isDirectory()) {
-                System.out.println(file.getName());
+                System.out.println("File: " + file.getName());
             }
             if (file.isDirectory()) {
+                System.out.printf("Directory: " + file.getName());
                 printStructure(file);
             }
         }
