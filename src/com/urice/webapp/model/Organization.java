@@ -103,7 +103,7 @@ public class Organization implements Serializable {
             if (!startDate.equals(position1.startDate)) return false;
             if (!endDate.equals(position1.endDate)) return false;
             if (!position.equals(position1.position)) return false;
-            return description.equals(position1.description);
+            return description != null ? description.equals(position1.description) : position1.description == null;
         }
 
         @Override
@@ -111,7 +111,7 @@ public class Organization implements Serializable {
             int result = startDate.hashCode();
             result = 31 * result + endDate.hashCode();
             result = 31 * result + position.hashCode();
-            result = 31 * result + description.hashCode();
+            result = 31 * result + (description != null ? description.hashCode() : 0);
             return result;
         }
     }
