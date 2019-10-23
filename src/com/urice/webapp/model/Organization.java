@@ -2,6 +2,7 @@ package com.urice.webapp.model;
 
 import com.urice.webapp.util.DateUtil;
 
+import java.io.Serializable;
 import java.time.Month;
 import java.time.YearMonth;
 import java.util.Arrays;
@@ -10,7 +11,8 @@ import java.util.Objects;
 
 import static com.urice.webapp.util.DateUtil.NOW;
 
-public class Organization {
+public class Organization implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private final Link homePage;
     private final List<Position> positions;
@@ -48,7 +50,7 @@ public class Organization {
         return result;
     }
 
-    public static class Position {
+    public static class Position implements Serializable {
         private final YearMonth startDate;
         private final YearMonth endDate;
         private final String position;

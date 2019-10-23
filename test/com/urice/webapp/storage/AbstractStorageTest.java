@@ -7,6 +7,7 @@ import com.urice.webapp.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
+    protected static final File STORAGE_DIR = new File("./storage");
     protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -71,6 +73,7 @@ public abstract class AbstractStorageTest {
         Resume resume = new Resume(UUID_1, "UpdateName?");
         storage.update(resume);
         assertGet(resume);
+
     }
 
     @Test(expected = NotExistStorageException.class)

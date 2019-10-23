@@ -11,16 +11,16 @@ import java.util.Objects;
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
     private File directory;
 
-    protected abstract void doWrite(OutputStream file, Resume resume) throws IOException;
+    protected abstract void doWrite(OutputStream outputStream, Resume resume) throws IOException;
 
-    protected abstract Resume doRead(InputStream file) throws IOException;
+    protected abstract Resume doRead(InputStream inputStream) throws IOException;
 
     protected AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
-        if (directory.canRead() || directory.canWrite()) {
+        if (!directory.canRead() || !directory.canWrite()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
