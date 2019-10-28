@@ -8,18 +8,18 @@ public class MainFile {
     public static void main(String[] args) {
         File dir = new File("../basejava/src/com/urice/webapp");
         System.out.println("Find all elements");
-        printStructure(dir);
+        printStructure(dir, "");
     }
 
-    public static void printStructure(File directory) {
+    public static void printStructure(File directory, String indent) {
         File[] files = Objects.requireNonNull(directory.listFiles(), "directory must not be null");
         for (File file : files) {
             if (!file.isDirectory()) {
-                System.out.println("File: " + file.getName());
+                System.out.println(indent + file.getName());
             }
             if (file.isDirectory()) {
-                System.out.printf("Directory: " + file.getName());
-                printStructure(file);
+                System.out.println(indent + file.getName());
+                printStructure(file, indent + "\t");
             }
         }
     }
