@@ -12,12 +12,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public abstract class AbstractPathStorage extends AbstractStorage<Path> implements StreamStorage {
     private Path directory;
 
-    protected abstract void doWrite(OutputStream outputStream, Resume resume) throws IOException;
+    public abstract void doWrite(OutputStream outputStream, Resume resume) throws IOException;
 
-    protected abstract Resume doRead(InputStream inputStream) throws IOException;
+    public abstract Resume doRead(InputStream inputStream) throws IOException;
 
     protected AbstractPathStorage(String directory) {
         this.directory = Objects.requireNonNull(Paths.get(directory), "directory must not be null");

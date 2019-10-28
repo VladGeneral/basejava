@@ -3,6 +3,6 @@ package com.urice.webapp.storage;
 public class ObjectStreamPathStorageTest extends AbstractStorageTest {
 
      public ObjectStreamPathStorageTest() {
-//        super(new ObjectStreamPathStorage(STORAGE_DIR));
+       super(new ObjectStreamPathStorage(PATH_STORAGE_DIR));
     }
 }
