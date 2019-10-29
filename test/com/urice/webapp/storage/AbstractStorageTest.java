@@ -44,7 +44,6 @@ public abstract class AbstractStorageTest {
                 new OrganizationSection(
                         new Organization("Organization2", "http://Organization2.ru",
                                 new Organization.Position(2015, Month.JANUARY, "position1", "content1"))));
-
     }
 
     public AbstractStorageTest(Storage storage) {

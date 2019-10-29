@@ -12,15 +12,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class PathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
+    private StreamStorage streamStorage;
 
-    public abstract void doWrite(OutputStream outputStream, Resume resume) throws IOException;
-
-    public abstract Resume doRead(InputStream inputStream) throws IOException;
-
-    protected PathStorage(String directory) {
-        this.directory = Objects.requireNonNull(Paths.get(directory), "directory must not be null");
+    protected PathStorage(Path directory, StreamStorage streamStorage) {
+        this.directory = Objects.requireNonNull(Paths.get(directory.toString()), "directory must not be null");
+        this.streamStorage = streamStorage;
         if (!Files.isDirectory(this.directory) || !Files.isWritable(this.directory)) {
             throw new IllegalArgumentException(directory + " is not directory");
         }
@@ -44,7 +42,7 @@ public abstract class PathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Path path, Resume resume) {
         try {
-            doWrite(new BufferedOutputStream(Files.newOutputStream(path)), resume);
+            streamStorage.doWrite(new BufferedOutputStream(Files.newOutputStream(path)), resume);
         } catch (IOException e) {
             throw new StorageException("Path write error", resume.getUuid(), e);
         }
@@ -53,7 +51,7 @@ public abstract class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return doRead(new BufferedInputStream(Files.newInputStream(path)));
+            return streamStorage.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Path read error ", path.getFileName().toString(), e);
         }
@@ -66,7 +64,7 @@ public abstract class PathStorage extends AbstractStorage<Path> {
                 throw new StorageException("Path delete error", path.getFileName().toString());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new StorageException("IO error/ Path delete error", path.getFileName().toString(), e);
         }
     }
 
