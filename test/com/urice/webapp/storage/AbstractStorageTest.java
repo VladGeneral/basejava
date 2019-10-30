@@ -7,17 +7,13 @@ import com.urice.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
-    protected static final File FILE_STORAGE_DIR = new File("./storage");
-    protected static final Path PATH_STORAGE_DIR = Paths.get("./storage");
+    protected static final String STORAGE_DIR = "./storage";
 
     protected Storage storage;
 
@@ -81,11 +77,6 @@ public abstract class AbstractStorageTest {
         assertGet(RESUME_1);
         assertGet(RESUME_2);
         assertGet(RESUME_3);
-    }
-
-    @Test(expected = ExistStorageException.class)
-    public void getExist() {
-        storage.save(RESUME_2);
     }
 
     @Test(expected = NotExistStorageException.class)
