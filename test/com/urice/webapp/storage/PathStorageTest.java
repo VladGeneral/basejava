@@ -1,10 +1,12 @@
 package com.urice.webapp.storage;
 
+import com.urice.webapp.storage.serializer.ObjectStreamSerializer;
+
 import java.nio.file.Paths;
 
 public class PathStorageTest extends AbstractStorageTest {
 
      public PathStorageTest() {
-       super(new PathStorage(Paths.get(STORAGE_DIR), new ObjectStreamStorage()));
+       super(new PathStorage(Paths.get(STORAGE_DIR), new ObjectStreamSerializer()));
     }
 }

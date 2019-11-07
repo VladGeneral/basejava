@@ -1,4 +1,4 @@
-package com.urice.webapp.storage;
+package com.urice.webapp.storage.serializer;
 
 import com.urice.webapp.model.Resume;
 
@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public interface StreamStorage {
+public interface StreamSerializer {
 
     void doWrite(OutputStream outputStream, Resume resume) throws IOException;
 
