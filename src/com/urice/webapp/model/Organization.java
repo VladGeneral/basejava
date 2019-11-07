@@ -1,7 +1,11 @@
 package com.urice.webapp.model;
 
 import com.urice.webapp.util.DateUtil;
+import com.urice.webapp.util.YearMonthAdapter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.Month;
 import java.time.YearMonth;
@@ -11,11 +15,15 @@ import java.util.Objects;
 
 import static com.urice.webapp.util.DateUtil.NOW;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final Link homePage;
-    private final List<Position> positions;
+    private Link homePage;
+    private List<Position> positions;
+
+    public Organization() {
+    }
 
     public Organization(String name, String url, Position... positions) {
         this.homePage = new Link(name, url);
@@ -50,11 +58,17 @@ public class Organization implements Serializable {
         return result;
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
-        private final YearMonth startDate;
-        private final YearMonth endDate;
-        private final String position;
-        private final String description;
+        @XmlJavaTypeAdapter(YearMonthAdapter.class)
+        private YearMonth startDate;
+        @XmlJavaTypeAdapter(YearMonthAdapter.class)
+        private YearMonth endDate;
+        private String position;
+        private String description;
+
+        public Position() {
+        }
 
         public Position(int year, Month month, String position, String description) {
             this(DateUtil.of(
