@@ -3,7 +3,10 @@ package com.urice.webapp.storage.serializer;
 import com.urice.webapp.model.*;
 
 import java.io.*;
+import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class DataStreamSerializer implements StreamSerializer {
@@ -21,27 +24,6 @@ public class DataStreamSerializer implements StreamSerializer {
                 dataOutputStream.writeUTF(entry.getValue());
             }
 
-/////////////////
-
-
-//            Map<SectionType, AbstractSection> sectionMap = resume.getSectionMap();
-//            dataOutputStream.writeInt(sectionMap.size());
-//
-//            for (Map.Entry<SectionType, AbstractSection> entry: sectionMap.entrySet()) {
-//
-//                dataOutputStream.writeUTF(entry.getKey().name());
-//
-//                for (SectionType type : SectionType.values()) {
-//                    System.out.println(type.getTitle() + ": " + resume.getSection(type));
-//                }
-//
-//            }
-//
-//            for (SectionType type : SectionType.values()) {
-//                System.out.println(type.getTitle() + ": " + resume.getSection(type));
-//            }
-
-
             for (Map.Entry<SectionType, AbstractSection> entry : resume.getSectionMap().entrySet()) {
                 SectionType sectionType = entry.getKey();
                 AbstractSection section = entry.getValue();
@@ -53,24 +35,56 @@ public class DataStreamSerializer implements StreamSerializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        writeSection(dataOutputStream, ((ListSection) section).getData());
+                        writeList(dataOutputStream, ((ListSection) section).getData());
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        writeSection(dataOutputStream, ((OrganizationSection) section).getData());
+                        writeOrganization(dataOutputStream, ((OrganizationSection) section).getData());
                         break;
-
                 }
+            }
+        }
+    }
+
+    private <T> void writeList(DataOutputStream dataOutputStream, Collection<T> collection) throws IOException {
+        dataOutputStream.writeInt(collection.size());
+        for (T t : collection) {
+            dataOutputStream.writeUTF(t.toString());
+        }
+    }
+
+    private void writeOrganization(DataOutputStream dataOutputStream, List<Organization> organizations) throws IOException {
+        dataOutputStream.writeInt(organizations.size());
+
+        for (Organization o : organizations) {
+            writeLink(dataOutputStream, o);
+            writePosition(dataOutputStream, o.getPositions());
+
+        }
+    }
+
+    private void writeLink(DataOutputStream dataOutputStream, Organization link) throws IOException {
+        dataOutputStream.writeUTF(link.getHomePage().getName());
+        dataOutputStream.writeUTF(link.getHomePage().getUrl());
+    }
+
+    private void writePosition(DataOutputStream dataOutputStream, List<Organization.Position> position) throws IOException {
+        for (Organization.Position p : position) {
+            writeYearMonth(dataOutputStream, p.getStartDate());
+            writeYearMonth(dataOutputStream, p.getEndDate());
+            dataOutputStream.writeUTF(p.getPosition());
+            if (p.getDescription() == null) {
+                dataOutputStream.writeUTF("null");
+            } else {
+                dataOutputStream.writeUTF(p.getDescription());
             }
 
         }
     }
 
-    private  <T> void writeSection(DataOutputStream dataOutputStream, Collection<T> collection) throws IOException {
-        dataOutputStream.writeInt(collection.size());
-        for (T t : collection) {
-            dataOutputStream.writeUTF(t.toString());
-        }
+    private void writeYearMonth(DataOutputStream dataOutputStream, YearMonth yearMonth) throws IOException {
+        dataOutputStream.writeInt(yearMonth.getYear());
+        dataOutputStream.writeInt(yearMonth.getMonthValue());
     }
 
 
@@ -91,8 +105,40 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-    private void readSection(DataInputStream dataInputStream){
+    private AbstractSection readSection(DataInputStream dataInputStream, SectionType sectionType) throws IOException {
+        switch (sectionType) {
+            case PERSONAL:
+            case OBJECTIVE:
+                return new TextSection(dataInputStream.readUTF());
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                return new ListSection(readList(dataInputStream));
+            case EXPERIENCE:
+            case EDUCATION:
+                return new OrganizationSection(readOrganization(dataInputStream));
+            default:
+                throw new IllegalArgumentException();
 
+        }
     }
+
+    private List<String> readList(DataInputStream dataInputStream) throws IOException {
+        int size = dataInputStream.readInt();
+        List<String> list = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(dataInputStream.readUTF());
+        }
+        return list;
+    }
+
+    private List<Organization> readOrganization(DataInputStream dataInputStream) throws IOException {
+        int size = dataInputStream.readInt();
+        List<Organization> list = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(dataInputStream.readUTF());
+        }
+        return list;
+    }
+
 
 }
