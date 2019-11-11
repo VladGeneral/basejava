@@ -24,7 +24,11 @@ public class DataStreamSerializer implements StreamSerializer {
                 dataOutputStream.writeUTF(entry.getValue());
             }
 
-            for (Map.Entry<SectionType, AbstractSection> entry : resume.getSectionMap().entrySet()) {
+
+            Map<SectionType, AbstractSection> sectionMap = resume.getSectionMap();
+            dataOutputStream.writeInt(sectionMap.size());
+
+            for (Map.Entry<SectionType, AbstractSection> entry : sectionMap.entrySet()) {
                 SectionType sectionType = entry.getKey();
                 AbstractSection section = entry.getValue();
                 dataOutputStream.writeUTF(sectionType.name());
@@ -69,6 +73,8 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private void writePosition(DataOutputStream dataOutputStream, List<Organization.Position> position) throws IOException {
+        dataOutputStream.writeInt(position.size());
+
         for (Organization.Position p : position) {
             writeYearMonth(dataOutputStream, p.getStartDate());
             writeYearMonth(dataOutputStream, p.getEndDate());
@@ -99,8 +105,11 @@ public class DataStreamSerializer implements StreamSerializer {
                 resume.setContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
             }
 
-            readSection(dataInputStream);
-
+            int sizeSections = dataInputStream.readInt();
+            for (int i = 0; i < sizeSections; i++) {
+                SectionType sectionType = SectionType.valueOf(dataInputStream.readUTF());
+                resume.setSection(sectionType, readSection(dataInputStream, sectionType));
+            }
             return resume;
         }
     }
@@ -125,20 +134,39 @@ public class DataStreamSerializer implements StreamSerializer {
     private List<String> readList(DataInputStream dataInputStream) throws IOException {
         int size = dataInputStream.readInt();
         List<String> list = new ArrayList<>(size);
+
         for (int i = 0; i < size; i++) {
             list.add(dataInputStream.readUTF());
         }
         return list;
     }
 
-    private List<Organization> readOrganization(DataInputStream dataInputStream) throws IOException {
-        int size = dataInputStream.readInt();
+    private List<Organization> readOrganization(DataInputStream dts) throws IOException {
+        int size = dts.readInt();
         List<Organization> list = new ArrayList<>(size);
+
         for (int i = 0; i < size; i++) {
-            list.add(dataInputStream.readUTF());
+            Link link = new Link(dts.readUTF(), dts.readUTF());
+            List<Organization.Position> positions = readPosition(dts);
+            list.add(new Organization(link, positions));
         }
         return list;
     }
 
+    private List<Organization.Position> readPosition(DataInputStream dts) throws IOException {
+        int size = dts.readInt();
+        List<Organization.Position> positionList = new ArrayList<>(size);
 
+        for (int i = 0; i < size; i++) {
+            YearMonth startYearMonth = YearMonth.of(dts.readInt(), dts.readInt());
+            YearMonth endYearMonth = YearMonth.of(dts.readInt(), dts.readInt());
+            String position = dts.readUTF();
+            String description = dts.readUTF();
+                   if (description.contains("null")){
+                       description = null;
+                   }
+            positionList.add(new Organization.Position(startYearMonth,endYearMonth,position,description));
+        }
+        return positionList;
+    }
 }
