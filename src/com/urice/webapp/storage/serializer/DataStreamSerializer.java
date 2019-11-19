@@ -7,20 +7,19 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class DataStreamSerializer implements StreamSerializer {
 
-    private interface writeOrganization<T> {
-        void get(T t) throws IOException;
+    private interface writeOrganizations<T> {
+        void write(T t) throws IOException;
     }
 
-    private interface readOrganization<T> {
+    private interface readOrganizations<T> {
         T read() throws IOException;
     }
 
     private interface contactMapAction<T> {
-        void doIt() throws IOException;
+        void action() throws IOException;
     }
 
     @Override
@@ -29,15 +28,12 @@ public class DataStreamSerializer implements StreamSerializer {
             dataOutputStream.writeUTF(resume.getUuid());
             dataOutputStream.writeUTF(resume.getFullName());
 
-            Map<ContactType, String> contacts = resume.getContactMap();
-
-            writeCollection(dataOutputStream, contacts.entrySet(), e -> {
+            writeCollections(dataOutputStream, resume.getContactMap().entrySet(), e -> {
                 dataOutputStream.writeUTF(e.getKey().name());
                 dataOutputStream.writeUTF(e.getValue());
             });
 
-
-            writeCollection(dataOutputStream, resume.getSectionMap().entrySet(), e -> {
+            writeCollections(dataOutputStream, resume.getSectionMap().entrySet(), e -> {
                 SectionType sectionType = e.getKey();
                 AbstractSection section = e.getValue();
                 dataOutputStream.writeUTF(sectionType.name());
@@ -48,21 +44,18 @@ public class DataStreamSerializer implements StreamSerializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        writeCollection(dataOutputStream, ((ListSection) section).getData(), dataOutputStream::writeUTF);
+                        writeCollections(dataOutputStream, ((ListSection) section).getData(), dataOutputStream::writeUTF);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        writeCollection(dataOutputStream, ((OrganizationSection) section).getData(), o -> {
-                            dataOutputStream.writeUTF(o.getHomePage().getName());
-                            dataOutputStream.writeUTF(stringFillNonNull(o.getHomePage().getUrl()));
-
-                            writeCollection(dataOutputStream, o.getPositions(), pos -> {
+                        writeCollections(dataOutputStream, ((OrganizationSection) section).getData(), org -> {
+                            dataOutputStream.writeUTF(org.getHomePage().getName());
+                            dataOutputStream.writeUTF(stringFillNonNull(org.getHomePage().getUrl()));
+                            writeCollections(dataOutputStream, org.getPositions(), pos -> {
                                 writeYearMonth(dataOutputStream, pos.getStartDate());
                                 writeYearMonth(dataOutputStream, pos.getEndDate());
-
                                 dataOutputStream.writeUTF(pos.getPosition());
                                 dataOutputStream.writeUTF(stringFillNonNull(pos.getDescription()));
-
                             });
                         });
                         break;
@@ -71,10 +64,10 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-    private <T> void writeCollection(DataOutputStream dataOutputStream, Collection<T> collection, writeOrganization<T> organization) throws IOException {
+    private <T> void writeCollections(DataOutputStream dataOutputStream, Collection<T> collection, writeOrganizations<T> organization) throws IOException {
         dataOutputStream.writeInt(collection.size());
         for (T t : collection) {
-            organization.get(t);
+            organization.write(t);
         }
     }
 
@@ -89,38 +82,37 @@ public class DataStreamSerializer implements StreamSerializer {
             String uuid = dataInputStream.readUTF();
             String fullName = dataInputStream.readUTF();
             Resume resume = new Resume(uuid, fullName);
-
             readContactMap(dataInputStream, () -> resume.setContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF()));
-
             readContactMap(dataInputStream, () -> {
                 SectionType sectionType = SectionType.valueOf(dataInputStream.readUTF());
-                resume.setSection(sectionType, readSection(dataInputStream, sectionType));
+                resume.setSection(sectionType, readSections(dataInputStream, sectionType));
             });
             return resume;
         }
     }
 
-    private AbstractSection readSection(DataInputStream dataInputStream, SectionType sectionType) throws IOException {
+    private AbstractSection readSections(DataInputStream dataInputStream, SectionType sectionType) throws IOException {
         switch (sectionType) {
             case PERSONAL:
             case OBJECTIVE:
                 return new TextSection(dataInputStream.readUTF());
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                return new ListSection(readSomething(dataInputStream, dataInputStream::readUTF));
+                return new ListSection(readLists(dataInputStream, dataInputStream::readUTF));
             case EXPERIENCE:
             case EDUCATION:
-                return new OrganizationSection(readSomething(dataInputStream, () -> new Organization(
+                return new OrganizationSection(readLists(dataInputStream, () -> new Organization(
                         new Link(dataInputStream.readUTF(), stringReadNonNull(dataInputStream.readUTF())),
-                        readSomething(dataInputStream, () ->
-                                new Organization.Position(getYearMonth(dataInputStream), getYearMonth(dataInputStream), dataInputStream.readUTF(), stringReadNonNull(dataInputStream.readUTF()))))));
+                        readLists(dataInputStream, () ->
+                                new Organization.Position(getYearMonth(dataInputStream), getYearMonth(dataInputStream),
+                                        dataInputStream.readUTF(), stringReadNonNull(dataInputStream.readUTF()))))));
             default:
                 throw new IllegalArgumentException();
 
         }
     }
 
-    private <T> List<T> readSomething(DataInputStream dataInputStream, readOrganization<T> readOrganization) throws IOException {
+    private <T> List<T> readLists(DataInputStream dataInputStream, readOrganizations<T> readOrganization) throws IOException {
         int size = dataInputStream.readInt();
         List<T> list = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
@@ -132,7 +124,7 @@ public class DataStreamSerializer implements StreamSerializer {
     private void readContactMap(DataInputStream dataInputStream, contactMapAction mapAction) throws IOException {
         int size = dataInputStream.readInt();
         for (int i = 0; i < size; i++) {
-            mapAction.doIt();
+            mapAction.action();
         }
     }
 
