@@ -11,6 +11,18 @@ import java.util.Map;
 
 public class DataStreamSerializer implements StreamSerializer {
 
+    private interface writeOrganization<T> {
+        void get(T t) throws IOException;
+    }
+
+    private interface readOrganization<T> {
+        T read() throws IOException;
+    }
+
+    private interface contactMapAction<T> {
+        void doIt() throws IOException;
+    }
+
     @Override
     public void doWrite(OutputStream outputStream, Resume resume) throws IOException {
         try (DataOutputStream dataOutputStream = new DataOutputStream(outputStream)) {
@@ -23,6 +35,7 @@ public class DataStreamSerializer implements StreamSerializer {
                 dataOutputStream.writeUTF(e.getKey().name());
                 dataOutputStream.writeUTF(e.getValue());
             });
+
 
             writeCollection(dataOutputStream, resume.getSectionMap().entrySet(), e -> {
                 SectionType sectionType = e.getKey();
@@ -41,7 +54,7 @@ public class DataStreamSerializer implements StreamSerializer {
                     case EDUCATION:
                         writeCollection(dataOutputStream, ((OrganizationSection) section).getData(), o -> {
                             dataOutputStream.writeUTF(o.getHomePage().getName());
-                            dataOutputStream.writeUTF(o.getHomePage().getUrl());
+                            dataOutputStream.writeUTF(stringFillNonNull(o.getHomePage().getUrl()));
 
                             writeCollection(dataOutputStream, o.getPositions(), pos -> {
                                 writeYearMonth(dataOutputStream, pos.getStartDate());
@@ -65,25 +78,9 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-    private interface writeOrganization<T> {
-        void get(T t) throws IOException;
-    }
-
-    private interface readOrganization<T> {
-        T read() throws IOException;
-    }
-
-    private interface contactMapAction<T> {
-        void doIt() throws IOException;
-    }
-
     private void writeYearMonth(DataOutputStream dataOutputStream, YearMonth yearMonth) throws IOException {
         dataOutputStream.writeInt(yearMonth.getYear());
         dataOutputStream.writeInt(yearMonth.getMonthValue());
-    }
-
-    private YearMonth getYearMonth(DataInputStream dataInputStream) throws IOException {
-        return YearMonth.of(dataInputStream.readInt(), dataInputStream.readInt());
     }
 
     @Override
@@ -114,7 +111,7 @@ public class DataStreamSerializer implements StreamSerializer {
             case EXPERIENCE:
             case EDUCATION:
                 return new OrganizationSection(readSomething(dataInputStream, () -> new Organization(
-                        new Link(dataInputStream.readUTF(), dataInputStream.readUTF()),
+                        new Link(dataInputStream.readUTF(), stringReadNonNull(dataInputStream.readUTF())),
                         readSomething(dataInputStream, () ->
                                 new Organization.Position(getYearMonth(dataInputStream), getYearMonth(dataInputStream), dataInputStream.readUTF(), stringReadNonNull(dataInputStream.readUTF()))))));
             default:
@@ -126,7 +123,7 @@ public class DataStreamSerializer implements StreamSerializer {
     private <T> List<T> readSomething(DataInputStream dataInputStream, readOrganization<T> readOrganization) throws IOException {
         int size = dataInputStream.readInt();
         List<T> list = new ArrayList<>(size);
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < size; i++) {
             list.add(readOrganization.read());
         }
         return list;
@@ -139,19 +136,21 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
+    private YearMonth getYearMonth(DataInputStream dataInputStream) throws IOException {
+        return YearMonth.of(dataInputStream.readInt(), dataInputStream.readInt());
+    }
+
     private String stringFillNonNull(String str) {
-        String nullField = str;
-        if (nullField == null) {
-            str = "null";
+        if (str == null) {
+            return "null";
         }
         return str;
     }
 
     private String stringReadNonNull(String str) {
-        String s = "null";
         if (str.contains("null")) {
-            s = null;
+            return null;
         }
-        return s;
+        return str;
     }
 }
