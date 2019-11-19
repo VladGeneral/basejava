@@ -4,10 +4,7 @@ import com.urice.webapp.model.*;
 
 import java.io.*;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataStreamSerializer implements StreamSerializer {
 
@@ -39,16 +36,48 @@ public class DataStreamSerializer implements StreamSerializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        writeList(dataOutputStream, ((ListSection) section).getData());
+                        writeCollection(dataOutputStream, ((ListSection) section).getData(), text ->{
+                            dataOutputStream.writeUTF(text);
+                        });
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        writeOrganization(dataOutputStream, ((OrganizationSection) section).getData());
+                        writeCollection(dataOutputStream, ((OrganizationSection) section).getData(), o -> {
+                            dataOutputStream.writeUTF(o.getHomePage().getName());
+                            dataOutputStream.writeUTF(o.getHomePage().getUrl());
+
+                            writeCollection(dataOutputStream, o.getPositions(), pos -> {
+                                writeYearMonth(dataOutputStream, pos.getStartDate());
+                                writeYearMonth(dataOutputStream, pos.getEndDate());
+
+                                dataOutputStream.writeUTF(pos.getPosition());
+                                if (pos.getDescription() == null) {
+                                    dataOutputStream.writeUTF("null");
+                                } else {
+                                    dataOutputStream.writeUTF(pos.getDescription());
+                                }
+                            });
+                        });
                         break;
                 }
             }
         }
     }
+
+    private <T> void writeCollection(DataOutputStream dataOutputStream, Collection<T> collection, writeOrganization<T> organization) throws IOException {
+        dataOutputStream.writeInt(collection.size());
+
+        for (T t : collection) {
+            organization.get(t);
+        }
+
+
+    }
+
+    private interface writeOrganization<T> {
+        void get(T t) throws IOException;
+    }
+
 
     private <T> void writeList(DataOutputStream dataOutputStream, Collection<T> collection) throws IOException {
         dataOutputStream.writeInt(collection.size());
@@ -57,36 +86,6 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-    private void writeOrganization(DataOutputStream dataOutputStream, List<Organization> organizations) throws IOException {
-        dataOutputStream.writeInt(organizations.size());
-
-        for (Organization o : organizations) {
-            writeLink(dataOutputStream, o);
-            writePosition(dataOutputStream, o.getPositions());
-
-        }
-    }
-
-    private void writeLink(DataOutputStream dataOutputStream, Organization link) throws IOException {
-        dataOutputStream.writeUTF(link.getHomePage().getName());
-        dataOutputStream.writeUTF(link.getHomePage().getUrl());
-    }
-
-    private void writePosition(DataOutputStream dataOutputStream, List<Organization.Position> position) throws IOException {
-        dataOutputStream.writeInt(position.size());
-
-        for (Organization.Position p : position) {
-            writeYearMonth(dataOutputStream, p.getStartDate());
-            writeYearMonth(dataOutputStream, p.getEndDate());
-            dataOutputStream.writeUTF(p.getPosition());
-            if (p.getDescription() == null) {
-                dataOutputStream.writeUTF("null");
-            } else {
-                dataOutputStream.writeUTF(p.getDescription());
-            }
-
-        }
-    }
 
     private void writeYearMonth(DataOutputStream dataOutputStream, YearMonth yearMonth) throws IOException {
         dataOutputStream.writeInt(yearMonth.getYear());
@@ -162,10 +161,10 @@ public class DataStreamSerializer implements StreamSerializer {
             YearMonth endYearMonth = YearMonth.of(dts.readInt(), dts.readInt());
             String position = dts.readUTF();
             String description = dts.readUTF();
-                   if (description.contains("null")){
-                       description = null;
-                   }
-            positionList.add(new Organization.Position(startYearMonth,endYearMonth,position,description));
+            if (description.contains("null")) {
+                description = null;
+            }
+            positionList.add(new Organization.Position(startYearMonth, endYearMonth, position, description));
         }
         return positionList;
     }
