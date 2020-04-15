@@ -1,43 +1,40 @@
 package com.urice.webapp;
 
 public class MainDeadLock {
-    int counter = 0;
+    private static final Object LOCK0 = new Object();
+    private static final Object LOCK1 = new Object();
 
     public static void main(String[] args) {
-        MainDeadLock mainDeadLock0 = new MainDeadLock();
-        MainDeadLock mainDeadLock1 = new MainDeadLock();
+        MainDeadLock mainDeadLock = new MainDeadLock();
 
         Thread thread0 = new Thread() {
             @Override
             public void run() {
-                for (int i = 0; i < 10000; i++) {
-                    System.out.print(getName() + " - ");
-                    mainDeadLock0.deadLock(mainDeadLock0, mainDeadLock1);
-                }
-
+                mainDeadLock.deadLock(getName(), LOCK0, LOCK1);
             }
         };
         thread0.start();
-
         Thread thread1 = new Thread() {
             @Override
             public void run() {
-                for (int i = 0; i < 10000; i++) {
-                    System.out.print(getName() + " - ");
-                    mainDeadLock1.deadLock(mainDeadLock1, mainDeadLock0);
-                }
-
+                mainDeadLock.deadLock(getName(), LOCK1, LOCK0);
             }
         };
         thread1.start();
     }
 
-    public void deadLock(MainDeadLock from, MainDeadLock to) {
-        synchronized (from) {
-            synchronized (to) {
-                System.out.println(counter);
-                counter++;
+    public void deadLock(String threadName, Object lock0, Object lock1) {
+        synchronized (lock0) {
+            System.out.println(threadName + " - hold first synchronized block");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                System.out.println(threadName + " - waiting second synchronized block");
+            }
+            synchronized (lock1) {
+                System.out.println(threadName + " - hold second synchronized block");
             }
         }
     }
 }
+
