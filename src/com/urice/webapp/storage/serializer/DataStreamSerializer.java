@@ -10,15 +10,15 @@ import java.util.List;
 
 public class DataStreamSerializer implements StreamSerializer {
 
-    private interface writeOrganizations<T> {
+    private interface ElementWriter<T> {
         void write(T t) throws IOException;
     }
 
-    private interface readOrganizations<T> {
+    private interface ElementReader<T> {
         T read() throws IOException;
     }
 
-    private interface contactMapAction<T> {
+    private interface ElementAction<T> {
         void action() throws IOException;
     }
 
@@ -50,12 +50,12 @@ public class DataStreamSerializer implements StreamSerializer {
                     case EDUCATION:
                         writeCollections(dataOutputStream, ((OrganizationSection) section).getData(), org -> {
                             dataOutputStream.writeUTF(org.getHomePage().getName());
-                            dataOutputStream.writeUTF(stringFillNonNull(org.getHomePage().getUrl()));
+                            dataOutputStream.writeUTF(org.getHomePage().getUrl());
                             writeCollections(dataOutputStream, org.getPositions(), pos -> {
                                 writeYearMonth(dataOutputStream, pos.getStartDate());
                                 writeYearMonth(dataOutputStream, pos.getEndDate());
                                 dataOutputStream.writeUTF(pos.getPosition());
-                                dataOutputStream.writeUTF(stringFillNonNull(pos.getDescription()));
+                                dataOutputStream.writeUTF(pos.getDescription());
                             });
                         });
                         break;
@@ -64,10 +64,10 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-    private <T> void writeCollections(DataOutputStream dataOutputStream, Collection<T> collection, writeOrganizations<T> organization) throws IOException {
+    private <T> void writeCollections(DataOutputStream dataOutputStream, Collection<T> collection, ElementWriter<T> writer) throws IOException {
         dataOutputStream.writeInt(collection.size());
         for (T t : collection) {
-            organization.write(t);
+            writer.write(t);
         }
     }
 
@@ -82,8 +82,8 @@ public class DataStreamSerializer implements StreamSerializer {
             String uuid = dataInputStream.readUTF();
             String fullName = dataInputStream.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            readContactMap(dataInputStream, () -> resume.setContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF()));
-            readContactMap(dataInputStream, () -> {
+            readItems(dataInputStream, () -> resume.setContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF()));
+            readItems(dataInputStream, () -> {
                 SectionType sectionType = SectionType.valueOf(dataInputStream.readUTF());
                 resume.setSection(sectionType, readSections(dataInputStream, sectionType));
             });
@@ -102,26 +102,26 @@ public class DataStreamSerializer implements StreamSerializer {
             case EXPERIENCE:
             case EDUCATION:
                 return new OrganizationSection(readLists(dataInputStream, () -> new Organization(
-                        new Link(dataInputStream.readUTF(), stringReadNonNull(dataInputStream.readUTF())),
+                        new Link(dataInputStream.readUTF(), dataInputStream.readUTF()),
                         readLists(dataInputStream, () ->
                                 new Organization.Position(getYearMonth(dataInputStream), getYearMonth(dataInputStream),
-                                        dataInputStream.readUTF(), stringReadNonNull(dataInputStream.readUTF()))))));
+                                        dataInputStream.readUTF(), dataInputStream.readUTF())))));
             default:
                 throw new IllegalArgumentException();
 
         }
     }
 
-    private <T> List<T> readLists(DataInputStream dataInputStream, readOrganizations<T> readOrganization) throws IOException {
+    private <T> List<T> readLists(DataInputStream dataInputStream, ElementReader<T> reader) throws IOException {
         int size = dataInputStream.readInt();
         List<T> list = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            list.add(readOrganization.read());
+            list.add(reader.read());
         }
         return list;
     }
 
-    private void readContactMap(DataInputStream dataInputStream, contactMapAction mapAction) throws IOException {
+    private void readItems(DataInputStream dataInputStream, ElementAction mapAction) throws IOException {
         int size = dataInputStream.readInt();
         for (int i = 0; i < size; i++) {
             mapAction.action();
@@ -132,17 +132,4 @@ public class DataStreamSerializer implements StreamSerializer {
         return YearMonth.of(dataInputStream.readInt(), dataInputStream.readInt());
     }
 
-    private String stringFillNonNull(String str) {
-        if (str == null) {
-            return "null";
-        }
-        return str;
-    }
-
-    private String stringReadNonNull(String str) {
-        if (str.contains("null")) {
-            return null;
-        }
-        return str;
-    }
 }
