@@ -2,6 +2,7 @@ package com.urice.webapp.util;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -21,15 +22,20 @@ public class MainStreams {
 
     int minValue(int[] values) {
         int result = 0;
-        int[] val = IntStream.of(values).distinct().sorted().toArray();
-        for (int i = 0; i < val.length; i++) {
-            result = result * 10 + val[i];
-        }
-        return result;
+        return IntStream.of(values).distinct().sorted().reduce(0,(a,b) -> a*10 +b);
+
     }
 
     List<Integer> oddOrEven(List<Integer> integers) {
-        return integers.stream().reduce(0, Integer::sum) % 2 != 0 ? integers.stream().filter(x -> x % 2 == 0).collect(Collectors.toList())
-                : integers.stream().filter(x -> x % 2 != 0).collect(Collectors.toList());
+        int sum = integers.stream().reduce(0, Integer::sum);
+        if (sum % 2 != 0) {
+            return setPredicate(integers, x -> x % 2 == 0);
+        } else {
+            return setPredicate(integers, x -> x % 2 != 0);
+        }
+    }
+
+    List<Integer> setPredicate(List<Integer> integers, Predicate<Integer> predicate) {
+        return integers.stream().filter(predicate).collect(Collectors.toList());
     }
 }
