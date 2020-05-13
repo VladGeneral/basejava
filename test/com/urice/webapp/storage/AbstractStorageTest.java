@@ -1,5 +1,6 @@
 package com.urice.webapp.storage;
 
+import com.urice.webapp.Config;
 import com.urice.webapp.ResumeTestData;
 import com.urice.webapp.exception.ExistStorageException;
 import com.urice.webapp.exception.NotExistStorageException;
@@ -7,14 +8,14 @@ import com.urice.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
-    protected static final String STORAGE_DIR = "./storage";
-
+    protected static final File STORAGE_DIR = Config.get().getStorageDir();
     protected Storage storage;
 
     private static final String UUID_1 = "uuid1";

@@ -1,4 +1,4 @@
-package com.urice.webapp.util;
+package com.urice.webapp;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +29,7 @@ public class MainStreams {
     List<Integer> oddOrEven(List<Integer> integers) {
         int sum = integers.stream().reduce(0, Integer::sum);
         return integers.stream()
-                .filter(x -> sum % 2 != 0 ? x % 2 == 0 : x % 2 != 0)
+                .filter(x -> sum % 2 != x % 2)
                 .collect(Collectors.toList());
     }
 }
