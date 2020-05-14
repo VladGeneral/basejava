@@ -1,7 +1,7 @@
 create table resume
 (
     uuid         char(36) primary key not null,
-    "full_ name" text                 not null
+    "full_name" text                 not null
 );
 
 create table contact
