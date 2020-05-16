@@ -5,6 +5,7 @@ import com.urice.webapp.model.Resume;
 import com.urice.webapp.sql.SqlHelper;
 
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class SqlStorage implements Storage {
     public void delete(String uuid) {
         sqlHelper.execute("DELETE FROM resume r WHERE r.uuid =?", ps -> {
             ps.setString(1, uuid);
-            if (!ps.execute()) {
+            if (ps.executeUpdate() == 0) {
                 throw new NotExistStorageException(uuid);
             }
             return null;
@@ -63,7 +64,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return (List<Resume>) sqlHelper.execute("SELECT * FROM resume r ORDER BY full_name,uuid", ps -> {
+        return sqlHelper.execute("SELECT * FROM resume r ORDER BY full_name, uuid", ps -> {
             ResultSet rs = ps.executeQuery();
             List<Resume> resumes = new ArrayList<>();
             while (rs.next()) {
@@ -75,15 +76,15 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        sqlHelper.execute("DELETE FROM resume", ps -> null);
+        sqlHelper.execute("DELETE FROM resume", PreparedStatement::execute);
     }
 
     @Override
     public int size() {
         return sqlHelper.execute("SELECT COUNT(*) FROM resume", ps -> {
             ResultSet rs = ps.executeQuery();
-            int size = rs.getRow();
-            return size;
+            rs.next();
+            return rs.getInt(1);
         });
     }
 }
