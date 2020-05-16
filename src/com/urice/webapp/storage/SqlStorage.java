@@ -4,15 +4,19 @@ import com.urice.webapp.exception.NotExistStorageException;
 import com.urice.webapp.exception.StorageException;
 import com.urice.webapp.model.Resume;
 import com.urice.webapp.sql.ConnectionFactory;
+import com.urice.webapp.sql.SqlHelper;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.List;
 
 public class SqlStorage implements Storage {
-    public final ConnectionFactory connectionFactory;
+
+
+    SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
-        connectionFactory = () -> DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+        sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
     @Override
@@ -23,8 +27,15 @@ public class SqlStorage implements Storage {
             ps.setString(2, resume.getFullName());
             ps.execute();
         } catch (SQLException e) {
-
+            throw new StorageException(e);
         }
+
+        sqlHelper.execute("INSERT INTO resume (uuid, full_name) VALUES (?,?)", ps ->{
+           ps.setString(1,resume.getUuid());
+           ps.setString(2,resume.getFullName());
+           ps.execute();
+           return null;
+        });
 
     }
 
