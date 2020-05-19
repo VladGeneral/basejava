@@ -1,8 +1,5 @@
 package com.urice.webapp.sql;
 
-import com.urice.webapp.exception.ExistStorageException;
-import com.urice.webapp.exception.StorageException;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -14,14 +11,16 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public <T> T execute(String sqlString, ElementExecutor<T> elementExecutor) {
+    public void execute(String sql) {
+        execute(sql, PreparedStatement::execute);
+    }
+
+    public <T> T execute(String sqlString, SqlExecutor<T> sqlExecutor) {
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlString)) {
-            return elementExecutor.executor(ps);
+            return sqlExecutor.execute(ps);
         } catch (SQLException e) {
-            if (e.getSQLState().equals("23505")) {
-                throw new ExistStorageException(e.toString());
-            } else throw new StorageException(e);
+            throw ExceptionUtil.convertException(e);
         }
     }
 }
