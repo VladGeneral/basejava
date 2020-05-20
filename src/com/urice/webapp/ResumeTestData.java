@@ -32,7 +32,7 @@ public class ResumeTestData {
         uuid3(Name_3)]> but was: java.util.ArrayList<[uuid1(Name_1), uuid2(Name_2), uuid3(Name_3)]>
          */
 
-   /*     resume.setContact(ContactType.MOBILE, "89991236556");
+        resume.setContact(ContactType.MOBILE, "89991236556");
         resume.setContact(ContactType.SKYPE, "vladgeneral");
         resume.setContact(ContactType.MAIL, "vladgeneral@gmail.com");
         resume.setContact(ContactType.LINKEDIN, "www.linkedin.com");
@@ -40,7 +40,7 @@ public class ResumeTestData {
         resume.setContact(ContactType.STACKOVERFLOW, "www.stackoverflow.com");
         resume.setContact(ContactType.HOMEPAGE, "www.github.com/123");
 
-        resume.setSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, инициативность."));
+       /* resume.setSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, инициативность."));
         resume.setSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
         resume.setSection(SectionType.ACHIEVEMENT, new ListSection("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven.",
                 "Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. ",
@@ -68,7 +68,8 @@ public class ResumeTestData {
                 new Organization("Wrike", "www.wrike.com", new Organization.Position(YearMonth.of(2014, 10), YearMonth.of(2016, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike."))));
         resume.setSection(SectionType.EDUCATION, new OrganizationSection(
                 new Organization("Coursera", "www.coursera.org", new Organization.Position(YearMonth.of(2013, 3), YearMonth.of(2013, 5), "\"Functional Programming Principles in Scala\" by Martin Odersky", null)),
-                new Organization("Санкт-Петербургский исследовательский университет", "www.spb.ru", new Organization.Position(YearMonth.of(1993, 9), YearMonth.of(1996, 7), "Аспирантура (программист С, С++)", null), new Organization.Position(YearMonth.of(1987, 9), YearMonth.of(1993, 7), "Инженер (программист Fortran, C)", null))));*/
+                new Organization("Санкт-Петербургский исследовательский университет", "www.spb.ru", new Organization.Position(YearMonth.of(1993, 9), YearMonth.of(1996, 7), "Аспирантура (программист С, С++)", null), new Organization.Position(YearMonth.of(1987, 9), YearMonth.of(1993, 7), "Инженер (программист Fortran, C)", null))));
+        */
         return resume;
     }
 }
