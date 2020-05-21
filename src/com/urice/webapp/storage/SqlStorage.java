@@ -1,10 +1,8 @@
 package com.urice.webapp.storage;
 
 import com.urice.webapp.exception.NotExistStorageException;
-import com.urice.webapp.exception.StorageException;
 import com.urice.webapp.model.ContactType;
 import com.urice.webapp.model.Resume;
-import com.urice.webapp.sql.ExceptionUtil;
 import com.urice.webapp.sql.SqlHelper;
 
 import java.sql.*;
@@ -92,8 +90,19 @@ public class SqlStorage implements Storage {
                         "LEFT JOIN contact c ON r.uuid = c.resume_uuid " +
                         "ORDER BY full_name, uuid", ps -> {
                     ResultSet rs = ps.executeQuery();
-                    List<Resume> list = getContact(rs);
-                    return list;
+                    if (!rs.next()) {
+                        throw new NotExistStorageException(null);
+                    }
+                    Map<String, Resume> resumes = new LinkedHashMap<>();
+                    while (rs.next()) {
+                        String uuid = rs.getString("uuid");
+                        String fullName = rs.getString("full_name");
+                        resumes.computeIfAbsent(uuid, f -> new Resume(uuid, fullName));
+                        resumes.get(uuid).setContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                    }
+//                    Expected :java.util.Arrays$ArrayList
+//                    Actual   :java.util.ArrayList
+                    return new ArrayList<>(resumes.values());
                 });
     }
 
@@ -110,42 +119,20 @@ public class SqlStorage implements Storage {
         });
     }
 
-    private void fillContact(Resume resume, Connection connection) {
+    private void fillContact(Resume resume, Connection connection) throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT INTO contact (resume_uuid, type, value) " +
                         "VALUES (?,?,?) " +
                         "ON CONFLICT (resume_uuid,type) " +
                         "DO UPDATE SET value = excluded.value")) {
-            resume.getContactMap().forEach((key, value) -> {
-                try {
-                    ps.setString(1, resume.getUuid());
-                    ps.setString(2, key.name());
-                    ps.setString(3, value);
-                    ps.addBatch();
-                } catch (SQLException e) {
-                    throw ExceptionUtil.convertException(e);
-                }
-            });
-            ps.executeBatch();
-        } catch (SQLException e) {
-            throw new StorageException(e);
-        }
-    }
-
-    private List<Resume> getContact(ResultSet rs) throws SQLException {
-        Map<String, Resume> resumes = new LinkedHashMap<>();
-        Resume resume;
-        while (rs.next()) {
-            String uuid = rs.getString("uuid");
-            String fullName = rs.getString("full_name");
-            resume = resumes.get(uuid);
-            if (resume == null) {
-                resume = new Resume(uuid, fullName);
-                resumes.put(uuid, resume);
+            for (Map.Entry<ContactType, String> e : resume.getContactMap().entrySet()) {
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, e.getKey().name());
+                ps.setString(3, e.getValue());
+                ps.addBatch();
             }
-            resume.setContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+            ps.executeBatch();
         }
-        return new ArrayList<>(resumes.values());
     }
 }
 
