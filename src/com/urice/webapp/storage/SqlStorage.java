@@ -91,18 +91,17 @@ public class SqlStorage implements Storage {
                         "LEFT JOIN contact c ON r.uuid = c.resume_uuid " +
                         "ORDER BY full_name, uuid", ps -> {
                     ResultSet rs = ps.executeQuery();
+                    Map<String, Resume> resumes = new LinkedHashMap<>();
                     if (!rs.next()) {
                         throw new NotExistStorageException(null);
+                    } else {
+                        do {
+                            String uuid = rs.getString("uuid");
+                            String fullName = rs.getString("full_name");
+                            resumes.computeIfAbsent(uuid, f -> new Resume(uuid, fullName));
+                            resumes.get(uuid).setContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                        }while (rs.next());
                     }
-                    Map<String, Resume> resumes = new LinkedHashMap<>();
-                    while (rs.next()) {
-                        String uuid = rs.getString("uuid");
-                        String fullName = rs.getString("full_name");
-                        resumes.computeIfAbsent(uuid, f -> new Resume(uuid, fullName));
-                        resumes.get(uuid).setContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
-                    }
-//                    Expected :java.util.Arrays$ArrayList
-//                    Actual   :java.util.ArrayList
                     return new ArrayList<>(resumes.values());
                 });
     }
