@@ -96,8 +96,8 @@ public class SqlStorage implements Storage {
                         do {
                             String uuid = rs.getString("uuid");
                             String fullName = rs.getString("full_name");
-                            resumes.computeIfAbsent(uuid, f -> new Resume(uuid, fullName));
-                            addContact(rs,resumes.get(uuid));
+                            Resume resume = resumes.computeIfAbsent(uuid, f -> new Resume(uuid, fullName));
+                            addContact(rs, resume);
                         } while (rs.next());
                     }
                     return new ArrayList<>(resumes.values());
