@@ -42,10 +42,10 @@ public class SqlStorage implements Storage {
                 if (ps.executeUpdate() == 0) {
                     throw new NotExistStorageException(resume.getUuid());
                 }
-                deleteContacts(resume, connection);
-                fillContacts(resume, connection);
-                return null;
             }
+            deleteContacts(resume, connection);
+            fillContacts(resume, connection);
+            return null;
         });
     }
 
@@ -63,9 +63,7 @@ public class SqlStorage implements Storage {
                     }
                     Resume resume = new Resume(uuid, rs.getString("full_name"));
                     do {
-                        String value = rs.getString("value");
-                        ContactType contactType = ContactType.valueOf(rs.getString("type"));
-                        resume.setContact(contactType, value);
+                        addContact(rs, resume);
                     } while (rs.next());
                     return resume;
                 });
@@ -93,14 +91,14 @@ public class SqlStorage implements Storage {
                     ResultSet rs = ps.executeQuery();
                     Map<String, Resume> resumes = new LinkedHashMap<>();
                     if (!rs.next()) {
-                        throw new NotExistStorageException(null);
+                        return new ArrayList<>();
                     } else {
                         do {
                             String uuid = rs.getString("uuid");
                             String fullName = rs.getString("full_name");
                             resumes.computeIfAbsent(uuid, f -> new Resume(uuid, fullName));
-                            resumes.get(uuid).setContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
-                        }while (rs.next());
+                            addContact(rs,resumes.get(uuid));
+                        } while (rs.next());
                     }
                     return new ArrayList<>(resumes.values());
                 });
@@ -139,6 +137,14 @@ public class SqlStorage implements Storage {
         try (PreparedStatement ps = connection.prepareStatement("DELETE  FROM contact WHERE resume_uuid=?")) {
             ps.setString(1, resume.getUuid());
             ps.execute();
+        }
+    }
+
+    private void addContact(ResultSet rs, Resume resume) throws SQLException {
+        String type = rs.getString("type");
+        String value = rs.getString("value");
+        if (value != null) {
+            resume.setContact(ContactType.valueOf(type), value);
         }
     }
 }
