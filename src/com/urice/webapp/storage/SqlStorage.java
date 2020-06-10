@@ -43,7 +43,7 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(resume.getUuid());
                 }
             }
-            deleteContacts(resume, connection);
+            deleteContacts(resume);
             fillContacts(resume, connection);
             return null;
         });
@@ -99,8 +99,8 @@ public class SqlStorage implements Storage {
                             Resume resume = resumes.computeIfAbsent(uuid, f -> new Resume(uuid, fullName));
                             addContact(rs, resume);
                         } while (rs.next());
+                        return new ArrayList<>(resumes.values());
                     }
-                    return new ArrayList<>(resumes.values());
                 });
     }
 
@@ -133,11 +133,12 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void deleteContacts(Resume resume, Connection connection) throws SQLException {
-        try (PreparedStatement ps = connection.prepareStatement("DELETE  FROM contact WHERE resume_uuid=?")) {
+    private void deleteContacts(Resume resume) throws SQLException {
+        sqlHelper.execute("DELETE  FROM contact WHERE resume_uuid=?", ps -> {
             ps.setString(1, resume.getUuid());
             ps.execute();
-        }
+            return null;
+        });
     }
 
     private void addContact(ResultSet rs, Resume resume) throws SQLException {
