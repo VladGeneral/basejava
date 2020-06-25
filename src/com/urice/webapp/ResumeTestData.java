@@ -1,8 +1,6 @@
 package com.urice.webapp;
 
-import com.urice.webapp.model.ContactType;
-import com.urice.webapp.model.Resume;
-import com.urice.webapp.model.SectionType;
+import com.urice.webapp.model.*;
 
 public class ResumeTestData {
 
@@ -40,7 +38,7 @@ public class ResumeTestData {
         resume.setContact(ContactType.STACKOVERFLOW, "www.stackoverflow.com");
         resume.setContact(ContactType.HOMEPAGE, "www.github.com/123");
 
-       /* resume.setSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, инициативность."));
+        resume.setSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, инициативность."));
         resume.setSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
         resume.setSection(SectionType.ACHIEVEMENT, new ListSection("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven.",
                 "Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. ",
@@ -63,7 +61,7 @@ public class ResumeTestData {
                 "администрирование Hudson/Jenkins, Ant + custom task, SoapUI, JPublisher.",
                 "Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования.",
                 "Родной русский, английский \"upper intermediate\""));
-        resume.setSection(SectionType.EXPERIENCE, new OrganizationSection(
+        /*resume.setSection(SectionType.EXPERIENCE, new OrganizationSection(
                 new Organization( "Java Online Projects", "www.Javaops.ru", new Organization.Position(YearMonth.of(2013, 10), YearMonth.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.")),
                 new Organization("Wrike", "www.wrike.com", new Organization.Position(YearMonth.of(2014, 10), YearMonth.of(2016, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike."))));
         resume.setSection(SectionType.EDUCATION, new OrganizationSection(
