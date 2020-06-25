@@ -78,7 +78,7 @@ public class SqlStorage implements Storage {
 
 
                 int i=0;
-                while (i <2) {
+                while (i <2 && rs.next()) {
                     addTextSection(rs, r);
                     i++;
                 }
@@ -154,7 +154,7 @@ public class SqlStorage implements Storage {
             try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM section")) {
                 ResultSet rs = ps.executeQuery();
                 int i=0;
-                while (i <2) {
+                while (i <2 && rs.next()) {
                     Resume resume = resumes.get(rs.getString("resume_uuid"));
                     addTextSection(rs, resume);
                     i++;
