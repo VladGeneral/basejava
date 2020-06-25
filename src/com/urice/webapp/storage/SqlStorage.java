@@ -62,34 +62,38 @@ public class SqlStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         return sqlHelper.transactionalExecute(conn -> {
-            Resume r;
-            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume WHERE uuid =?")) {
+            Resume resume;
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT * FROM resume " +
+                            "WHERE uuid =?")) {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
                 if (!rs.next()) {
                     throw new NotExistStorageException(uuid);
                 }
-                r = new Resume(uuid, rs.getString("full_name"));
+                resume = new Resume(uuid, rs.getString("full_name"));
             }
-
-            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact WHERE resume_uuid =?")) {
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT * FROM contact " +
+                            "WHERE resume_uuid =?")) {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    addContact(rs, r);
+                    addContact(rs, resume);
                 }
             }
-            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section WHERE resume_uuid =?")) {
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT * FROM section " +
+                            "WHERE resume_uuid =?")) {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    addSection(rs, r);
+                    addSection(rs, resume);
                 }
             }
-            return r;
+            return resume;
         });
     }
-
 
     @Override
     public void delete(String uuid) {
@@ -126,9 +130,9 @@ public class SqlStorage implements Storage {
                 });*/
         return sqlHelper.transactionalExecute(connection -> {
             Map<String, Resume> resumes = new LinkedHashMap<>();
-
             try (PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM resume ORDER BY full_name, uuid")) {
+                    "SELECT * FROM resume " +
+                            "ORDER BY full_name, uuid")) {
                 ResultSet rs = ps.executeQuery();
                 if (!rs.next()) {
                     return new ArrayList<>();
@@ -140,21 +144,20 @@ public class SqlStorage implements Storage {
                     } while (rs.next());
                 }
             }
-
-            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM contact")) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM contact")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     Resume resume = resumes.get(rs.getString("resume_uuid"));
                     addContact(rs, resume);
                 }
             }
-
-            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM section")) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM section")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     Resume resume = resumes.get(rs.getString("resume_uuid"));
                     addSection(rs, resume);
-
                 }
             }
             return new ArrayList<>(resumes.values());
@@ -163,15 +166,17 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        sqlHelper.execute("DELETE FROM resume");
+        sqlHelper.execute(
+                "DELETE FROM resume");
     }
 
     @Override
     public int size() {
-        return sqlHelper.execute("SELECT COUNT(*) FROM resume", ps -> {
-            ResultSet rs = ps.executeQuery();
-            return rs.next() ? rs.getInt(1) : 0;
-        });
+        return sqlHelper.execute(
+                "SELECT COUNT(*) FROM resume", ps -> {
+                    ResultSet rs = ps.executeQuery();
+                    return rs.next() ? rs.getInt(1) : 0;
+                });
     }
 
     private void fillContacts(Resume resume, Connection connection) throws SQLException {
@@ -215,26 +220,29 @@ public class SqlStorage implements Storage {
                     ps.setString(3, sb.toString());
                     ps.addBatch();
                 }
-
             }
             ps.executeBatch();
         }
     }
 
     private void deleteContacts(Resume resume) throws SQLException {
-        sqlHelper.execute("DELETE  FROM contact WHERE resume_uuid=?", ps -> {
-            ps.setString(1, resume.getUuid());
-            ps.execute();
-            return null;
-        });
+        sqlHelper.execute(
+                "DELETE  FROM contact " +
+                        "WHERE resume_uuid=?", ps -> {
+                    ps.setString(1, resume.getUuid());
+                    ps.execute();
+                    return null;
+                });
     }
 
     private void deleteSections(Resume resume) throws SQLException {
-        sqlHelper.execute("DELETE  FROM section WHERE resume_uuid=?", ps -> {
-            ps.setString(1, resume.getUuid());
-            ps.execute();
-            return null;
-        });
+        sqlHelper.execute(
+                "DELETE  FROM section " +
+                        "WHERE resume_uuid=?", ps -> {
+                    ps.setString(1, resume.getUuid());
+                    ps.execute();
+                    return null;
+                });
     }
 
     private void addContact(ResultSet rs, Resume resume) throws SQLException {

@@ -22,17 +22,14 @@ public class ResumeServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-
 //        response.setContentType("text/html; charset=UTF-8");
 //        String name = request.getParameter("name");
 //        response.getWriter().write(name == null ? "Hello" : "Hello " + name + '!');
-
         response.setContentType("text/html; charset=UTF-8");
         Writer writer = response.getWriter();
         writer.write(
@@ -46,7 +43,6 @@ public class ResumeServlet extends HttpServlet {
                         "    <th>uuid</th>\n" +
                         "    <th>FullName</th> \n" +
                         "  </tr>\n");
-
         for (Resume resume : storage.getAllSorted()) {
             writer.write(
                     "<tr>" +
@@ -55,7 +51,6 @@ public class ResumeServlet extends HttpServlet {
                             "</tr>"
             );
         }
-
         writer.write(
                 "</table>\n" +
                         "\n" +
