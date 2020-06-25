@@ -12,6 +12,13 @@ public class SqlStorage implements Storage {
     private SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
+        try {
+            /*Больше информации
+            https://jdbc.postgresql.org/documentation/81/load.html*/
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
@@ -238,7 +245,6 @@ public class SqlStorage implements Storage {
         }
     }
 
-
     private void addSection(ResultSet rs, Resume resume) throws SQLException {
         SectionType type = SectionType.valueOf(rs.getString("type"));
         String value = rs.getString("value");
@@ -251,6 +257,5 @@ public class SqlStorage implements Storage {
             resume.setSection(type, new TextSection(value));
         }
     }
-
 }
 
