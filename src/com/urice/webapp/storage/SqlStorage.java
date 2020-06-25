@@ -75,8 +75,16 @@ public class SqlStorage implements Storage {
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section WHERE resume_uuid =?")) {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
+
+
+                int i=0;
+                while (i <2) {
+                    addTextSection(rs, r);
+                    i++;
+                }
                 while (rs.next()) {
-                    addSection(rs, r);
+                    addListSection(rs, r);
+
                 }
             }
 
@@ -143,11 +151,18 @@ public class SqlStorage implements Storage {
                 }
             }
 
-            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM contact")) {
+            try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM section")) {
                 ResultSet rs = ps.executeQuery();
+                int i=0;
+                while (i <2) {
+                    Resume resume = resumes.get(rs.getString("resume_uuid"));
+                    addTextSection(rs, resume);
+                    i++;
+                }
                 while (rs.next()) {
                     Resume resume = resumes.get(rs.getString("resume_uuid"));
-                    addSection(rs, resume);
+                    addListSection(rs, resume);
+
                 }
             }
             return new ArrayList<>(resumes.values());
@@ -238,15 +253,23 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void addSection(ResultSet rs, Resume resume) throws SQLException {
+    private void addTextSection(ResultSet rs, Resume resume) throws SQLException {
         SectionType type = SectionType.valueOf(rs.getString("type"));
         String value = rs.getString("value");
-        AbstractSection strings;
         if (value != null) {
-            //strings = value;
-//            Pattern pattern = Pattern.compile("\n");
-//            strings =  Arrays.asList(pattern.split(value));
-            resume.setSection(type, value);
+            resume.setSection(type,new TextSection(value));
+        }
+
+    }
+    private void addListSection(ResultSet rs, Resume resume) throws SQLException {
+        SectionType type = SectionType.valueOf(rs.getString("type"));
+        String value = rs.getString("value");
+
+        List<String> strings = new ArrayList<>();
+        if (value != null) {
+            Pattern pattern = Pattern.compile("\n");
+            strings =  Arrays.asList(pattern.split(value));
+            resume.setSection(type, new ListSection(strings));
         }
 
     }
