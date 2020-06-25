@@ -75,19 +75,10 @@ public class SqlStorage implements Storage {
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section WHERE resume_uuid =?")) {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
-
-
-                int i=0;
-                while (i <2 && rs.next()) {
-                    addTextSection(rs, r);
-                    i++;
-                }
                 while (rs.next()) {
-                    addListSection(rs, r);
-
+                    addSection(rs, r);
                 }
             }
-
             return r;
         });
     }
@@ -138,7 +129,7 @@ public class SqlStorage implements Storage {
                     do {
                         String uuid = rs.getString("uuid");
                         String fullName = rs.getString("full_name");
-                        Resume resume = resumes.computeIfAbsent(uuid, f -> resumes.put(uuid, new Resume(uuid, fullName)));
+                        resumes.computeIfAbsent(uuid, f -> resumes.put(uuid, new Resume(uuid, fullName)));
                     } while (rs.next());
                 }
             }
@@ -153,15 +144,9 @@ public class SqlStorage implements Storage {
 
             try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM section")) {
                 ResultSet rs = ps.executeQuery();
-                int i=0;
-                while (i <2 && rs.next()) {
-                    Resume resume = resumes.get(rs.getString("resume_uuid"));
-                    addTextSection(rs, resume);
-                    i++;
-                }
                 while (rs.next()) {
                     Resume resume = resumes.get(rs.getString("resume_uuid"));
-                    addListSection(rs, resume);
+                    addSection(rs, resume);
 
                 }
             }
@@ -205,7 +190,7 @@ public class SqlStorage implements Storage {
                         "ON CONFLICT (resume_uuid,type) " +
                         "DO UPDATE SET value = excluded.value")) {
             for (Map.Entry<SectionType, AbstractSection> e : resume.getSectionMap().entrySet()) {
-                if (e.getValue().getClass().isAssignableFrom(TextSection.class)){
+                if (e.getValue().getClass().equals(TextSection.class)) {
                     ps.setString(1, resume.getUuid());
                     ps.setString(2, e.getKey().name());
                     ps.setString(3, String.valueOf(e.getValue()));
@@ -253,25 +238,18 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void addTextSection(ResultSet rs, Resume resume) throws SQLException {
+
+    private void addSection(ResultSet rs, Resume resume) throws SQLException {
         SectionType type = SectionType.valueOf(rs.getString("type"));
         String value = rs.getString("value");
-        if (value != null) {
-            resume.setSection(type,new TextSection(value));
-        }
-
-    }
-    private void addListSection(ResultSet rs, Resume resume) throws SQLException {
-        SectionType type = SectionType.valueOf(rs.getString("type"));
-        String value = rs.getString("value");
-
         List<String> strings = new ArrayList<>();
-        if (value != null) {
+        if (value.contains("\n")) {
             Pattern pattern = Pattern.compile("\n");
-            strings =  Arrays.asList(pattern.split(value));
+            strings = Arrays.asList(pattern.split(value));
             resume.setSection(type, new ListSection(strings));
+        } else {
+            resume.setSection(type, new TextSection(value));
         }
-
     }
 
 }
