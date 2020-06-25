@@ -34,6 +34,20 @@ public class ResumeServlet extends HttpServlet {
         Writer writer = response.getWriter();
         writer.write(
                 "<html>\n" +
+                        "<head>\n" +
+                        "<style>\n" +
+                        "table, th, td {\n" +
+                        "  border: 1px solid black;\n" +
+                        "  border-collapse: collapse;\n" +
+                        "}\n" +
+                        "th, td {\n" +
+                        "  padding: 5px;\n" +
+                        "}" +
+                        "th {\n" +
+                        "  text-align: left;\n" +
+                        "}" +
+                        "</style>\n" +
+                        "</head>" +
                         "<body>\n" +
                         "\n" +
                         "<h2>Resume HTML Table</h2>\n" +
