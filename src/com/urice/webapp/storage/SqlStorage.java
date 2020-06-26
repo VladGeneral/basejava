@@ -203,16 +203,13 @@ public class SqlStorage implements Storage {
                     case PERSONAL:
                     case OBJECTIVE:
                         ps.setString(3, String.valueOf(e.getValue()));
-                        ps.addBatch();
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        ps.setString(1, resume.getUuid());
-                        ps.setString(2, e.getKey().name());
                         ps.setString(3, String.join("\n", ((ListSection) e.getValue()).getData()));
-                        ps.addBatch();
                         break;
                 }
+                ps.addBatch();
             }
             ps.executeBatch();
         }
