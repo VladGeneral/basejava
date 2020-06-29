@@ -2,17 +2,25 @@ package com.urice.webapp;
 
 import com.urice.webapp.model.*;
 
+import java.util.UUID;
+
 public class ResumeTestData {
 
-    public static void main(String[] args) {
-        Resume resume = fillResume("uuidTest", "nameTest");
-        for (ContactType type : ContactType.values()) {
-            System.out.println(type.getTitle() + ": " + resume.getContact(type));
-        }
+    public static final String UUID_1 = UUID.randomUUID().toString();
+    public static final String UUID_2 = UUID.randomUUID().toString();
+    public static final String UUID_3 = UUID.randomUUID().toString();
+    public static final String UUID_4 = UUID.randomUUID().toString();
 
-        for (SectionType type : SectionType.values()) {
-            System.out.println(type.getTitle() + ": " + resume.getSection(type));
-        }
+    public static final Resume RESUME_1;
+    public static final Resume RESUME_2;
+    public static final Resume RESUME_3;
+    public static final Resume RESUME_4;
+
+    static {
+        RESUME_1 = ResumeTestData.fillResume(UUID_1, "Name_1");
+        RESUME_2 = ResumeTestData.fillResume(UUID_2, "Name_2");
+        RESUME_3 = ResumeTestData.fillResume(UUID_3, "Name_3");
+        RESUME_4 = ResumeTestData.fillResume(UUID_4, "Name_4");
     }
 
     public static Resume fillResume(String uuid, String fullName) {
