@@ -1,6 +1,7 @@
 package com.urice.webapp.web;
 
 import com.urice.webapp.Config;
+import com.urice.webapp.model.ContactType;
 import com.urice.webapp.model.Resume;
 import com.urice.webapp.storage.Storage;
 
@@ -35,34 +36,23 @@ public class ResumeServlet extends HttpServlet {
         writer.write(
                 "<html>\n" +
                         "<head>\n" +
-                        "<style>\n" +
-                        "table, th, td {\n" +
-                        "  border: 1px solid black;\n" +
-                        "  border-collapse: collapse;\n" +
-                        "}\n" +
-                        "th, td {\n" +
-                        "  padding: 5px;\n" +
-                        "}" +
-                        "th {\n" +
-                        "  text-align: left;\n" +
-                        "}" +
-                        "</style>\n" +
-                        "</head>" +
+                        "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
+                        "    <link rel=\"stylesheet\" href=\"css/style.css\">\n" +
+                        "    <title>Список всех резюме</title>\n" +
+                        "</head>\n" +
                         "<body>\n" +
-                        "\n" +
-                        "<h2>Resume HTML Table</h2>\n" +
-                        "\n" +
-                        "<table style=\"width:100%\">\n" +
-                        "  <tr>\n" +
-                        "    <th>uuid</th>\n" +
-                        "    <th>FullName</th> \n" +
-                        "  </tr>\n");
+                        "<section>\n" +
+                        "<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\">\n" +
+                        "    <tr>\n" +
+                        "        <th>Имя</th>\n" +
+                        "        <th>Email</th>\n" +
+                        "    </tr>\n");
         for (Resume resume : storage.getAllSorted()) {
             writer.write(
-                    "<tr>" +
-                            "<td>" + resume.getUuid() + "</td>" +
-                            "<td>" + resume.getFullName() + "</td>" +
-                            "</tr>"
+                    "<tr>\n" +
+                            "     <td><a href=\"resume?uuid=" + resume.getUuid() + "\">" + resume.getFullName() + "</a></td>\n" +
+                            "     <td>" + resume.getContact(ContactType.MAIL) + "</td>\n" +
+                            "</tr>\n"
             );
         }
         writer.write(
