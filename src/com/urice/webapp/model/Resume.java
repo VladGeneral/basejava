@@ -68,6 +68,10 @@ public class Resume implements Comparable<Resume>, Serializable {
         sectionMap.put(sectionType, value);
     }
 
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
