@@ -48,7 +48,10 @@ public class ResumeTestData {
 
         resume.setSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, инициативность."));
         resume.setSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
-        resume.setSection(SectionType.ACHIEVEMENT, new ListSection("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven.",
+        resume.setSection(SectionType.ACHIEVEMENT, new ListSection("С 2013 года: разработка проектов:",
+                "Разработка Web приложения",
+                "Java Enterprise",
+                "Многомодульный maven.",
                 "Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. ",
                 "Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM.",
                 "Реализация c нуля Rich Internet Application приложения на стеке технологий JPA, Spring, Spring-MVC",
