@@ -1,8 +1,7 @@
 package com.urice.webapp.web;
 
 import com.urice.webapp.Config;
-import com.urice.webapp.model.ContactType;
-import com.urice.webapp.model.Resume;
+import com.urice.webapp.model.*;
 import com.urice.webapp.storage.Storage;
 
 import javax.servlet.ServletConfig;
@@ -35,6 +34,25 @@ public class ResumeServlet extends HttpServlet {
                 r.getContactMap().remove(contactType);
             }
         }
+
+        for (SectionType type : SectionType.values()) {
+            String value = request.getParameter(type.name());
+            if (value != null && value.trim().length() != 0) {
+                switch (type) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        r.setSection(type, new TextSection(value));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        r.setSection(type, new ListSection(value.split("\\n")));
+                        break;
+                }
+                } else{
+                    r.getSectionMap().remove(type);
+                }
+        }
+
         storage.update(r);
         response.sendRedirect("resume");
 
