@@ -24,8 +24,15 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume r = storage.get(uuid);
-        r.setFullName(fullName);
+        boolean isExist = (uuid != null && uuid.trim().length() != 0);
+        Resume r;
+        if (!isExist) {
+            r = new Resume(fullName);
+        } else {
+            r = storage.get(uuid);
+            r.setFullName(fullName);
+        }
+
         for (ContactType contactType : ContactType.values()) {
             String value = request.getParameter(contactType.name());
             if (value != null && value.trim().length() != 0) {
@@ -45,17 +52,19 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        r.setSection(type, new ListSection(value));
+                        r.setSection(type, new ListSection(value.split("\n")));
                         break;
                 }
-                } else{
-                    r.getSectionMap().remove(type);
-                }
+            } else {
+                r.getSectionMap().remove(type);
+            }
         }
-
-        storage.update(r);
+        if (!isExist) {
+            storage.save(r);
+        } else {
+            storage.update(r);
+        }
         response.sendRedirect("resume");
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -68,6 +77,9 @@ public class ResumeServlet extends HttpServlet {
         }
         Resume r;
         switch (action) {
+            case "add":
+                r = new Resume();
+                break;
             case "delete":
                 storage.delete(uuid);
                 response.sendRedirect("resume");
