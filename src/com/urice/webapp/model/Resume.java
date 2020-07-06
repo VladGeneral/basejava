@@ -17,6 +17,15 @@ import java.util.UUID;
 public class Resume implements Comparable<Resume>, Serializable {
     private static final long serialVersionUID = 1L;
 
+    public static final Resume EMPTY_RESUME = new Resume();
+
+    static {
+        EMPTY_RESUME.setSection(SectionType.PERSONAL, new TextSection(""));
+        EMPTY_RESUME.setSection(SectionType.OBJECTIVE, new TextSection(""));
+        EMPTY_RESUME.setSection(SectionType.ACHIEVEMENT, new ListSection(""));
+        EMPTY_RESUME.setSection(SectionType.QUALIFICATIONS, new ListSection(""));
+    }
+
     // Unique identifier
     private String uuid;
     private String fullName;
