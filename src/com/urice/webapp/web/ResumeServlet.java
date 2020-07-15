@@ -47,6 +47,7 @@ public class ResumeServlet extends HttpServlet {
 
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
+
             if (value != null && value.trim().length() != 0) {
                 switch (type) {
                     case PERSONAL:
@@ -58,34 +59,30 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case QUALIFICATIONS:
                         r.setSection(type, new ListSection(value.split("\n")));
-                        int x =0;
+                        int x = 0;
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
                         List<Organization> organizationsList = new ArrayList<>();
                         List<Organization.Position> positionList = new ArrayList<>();
                         String[] names = request.getParameterValues(type.name());
-                        String[] urls = request.getParameterValues(type.name()+ "url");
-                        for (int i = 0; i < names.length ; i++) {
-                            String[] startDates = request.getParameterValues(type.name() + i + "startDate");
-                            String[] endDates = request.getParameterValues(type.name() + i + "endDate");
-                            String[] positions = request.getParameterValues(type.name() + i + "position");
-                            String[] descriptions = request.getParameterValues(type.name() + i + "description");
-                            for (int j = 0; j < positions.length; j++) {
-                                if (positions != null) {
-                                    positionList.add(new Organization.Position(
-                                            YearMonth.parse(startDates[j]),
-                                            YearMonth.parse(endDates[j]),
-                                            positions[j],
-                                            descriptions[j]));
-                                }
+                        String[] urls = request.getParameterValues(type.name() + "url");
+                        String[] startDates = request.getParameterValues(type.name() + "startDate");
+                        String[] endDates = request.getParameterValues(type.name() + "endDate");
+                        String[] positions = request.getParameterValues(type.name() + "position");
+                        String[] descriptions = request.getParameterValues(type.name() + "description");
+                        for (int j = 0; j < names.length; j++) {
+                            if (positions != null) {
+                                positionList.add(new Organization.Position(
+                                        YearMonth.parse(startDates[j]),
+                                        YearMonth.parse(endDates[j]),
+                                        positions[j],
+                                        descriptions[j]));
+                                organizationsList.add(new Organization(new Link(names[j], urls[j]), positionList));
                             }
-                            organizationsList.add(new Organization(new Link(names[i], urls[i]), positionList));
                         }
-                        r.setSection(type,new OrganizationSection(organizationsList));
-
+                        r.setSection(type, new OrganizationSection(organizationsList));
                         break;
-
                 }
             } else {
                 r.getSectionMap().remove(type);
@@ -121,18 +118,18 @@ public class ResumeServlet extends HttpServlet {
                 break;
             case "edit":
                 r = storage.get(uuid);
-                for (SectionType sectionType : SectionType.values()){
+                for (SectionType sectionType : SectionType.values()) {
                     AbstractSection section = r.getSection(sectionType);
-                    switch (sectionType){
+                    switch (sectionType) {
                         case PERSONAL:
                         case OBJECTIVE:
-                            if (section == null){
+                            if (section == null) {
                                 section = TextSection.EMPTY;
                             }
                             break;
                         case ACHIEVEMENT:
                         case QUALIFICATIONS:
-                            if (section == null){
+                            if (section == null) {
                                 section = ListSection.EMPTY;
                             }
                             break;
@@ -140,10 +137,10 @@ public class ResumeServlet extends HttpServlet {
                         case EDUCATION:
                             OrganizationSection organizationSection = (OrganizationSection) section;
                             List<Organization> list = new ArrayList<>();
-                            if (organizationSection == null){
+                            if (organizationSection == null) {
                                 section = new OrganizationSection(Organization.EMPTY);
-                            } else{
-                                for (Organization organization: organizationSection.getData()){
+                            } else {
+                                for (Organization organization : organizationSection.getData()) {
                                     List<Organization.Position> positions = new ArrayList<>();
                                     positions.addAll(organization.getPositions());
                                     list.add(new Organization(organization.getHomePage(), positions));
@@ -152,7 +149,7 @@ public class ResumeServlet extends HttpServlet {
                             }
                             break;
                     }
-                    r.setSection(sectionType,section);
+                    r.setSection(sectionType, section);
                 }
                 break;
             default:
