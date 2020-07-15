@@ -47,7 +47,6 @@ public class ResumeServlet extends HttpServlet {
 
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
-
             if (value != null && value.trim().length() != 0) {
                 switch (type) {
                     case PERSONAL:
@@ -59,27 +58,33 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case QUALIFICATIONS:
                         r.setSection(type, new ListSection(value.split("\n")));
-                        int x = 0;
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
+                        r.getSectionMap().remove(type);
                         List<Organization> organizationsList = new ArrayList<>();
-                        List<Organization.Position> positionList = new ArrayList<>();
-                        String[] names = request.getParameterValues(type.name());
                         String[] urls = request.getParameterValues(type.name() + "url");
-                        String[] startDates = request.getParameterValues(type.name() + "startDate");
-                        String[] endDates = request.getParameterValues(type.name() + "endDate");
-                        String[] positions = request.getParameterValues(type.name() + "position");
-                        String[] descriptions = request.getParameterValues(type.name() + "description");
-                        for (int j = 0; j < names.length; j++) {
+                        String[] names = request.getParameterValues(type.name());
+                        for (int i = 0; i < 1; i++) {
+                            List<Organization.Position> positionList = new ArrayList<>();
+                        String[] startDates = request.getParameterValues(type.name() + i + "startDate");
+                        String[] endDates = request.getParameterValues(type.name() + i + "endDate");
+                        String[] positions = request.getParameterValues(type.name() + i + "position");
+                        String[] descriptions = request.getParameterValues(type.name() + i + "description");
+                        for (int j = 0; j < positions.length; j++) {
+
                             if (positions != null) {
+
                                 positionList.add(new Organization.Position(
                                         YearMonth.parse(startDates[j]),
                                         YearMonth.parse(endDates[j]),
                                         positions[j],
                                         descriptions[j]));
-                                organizationsList.add(new Organization(new Link(names[j], urls[j]), positionList));
+
                             }
+
+                        }
+                            organizationsList.add(new Organization(new Link(names[i], urls[i]), positionList));
                         }
                         r.setSection(type, new OrganizationSection(organizationsList));
                         break;

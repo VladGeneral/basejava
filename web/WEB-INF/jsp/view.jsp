@@ -63,21 +63,15 @@
             <td>
                 <ol>
                     <c:forEach var="organization" items="<%=((OrganizationSection) section).getData()%>">
-                    <li><a href="${organization.homePage.url}">${organization.homePage.name}</a</li>
-                    <c:forEach var="position" items="${organization.positions}">
-        <tr>
-                <td>
-                    ${position.startDate}
-                    ${position.endDate}
-                </td>
-            <td>
-                ${position.position}<br>${position.description}
+                        <li><a href="${organization.homePage.url}">${organization.homePage.name}</a></li>
+                        <c:forEach var="position" items="${organization.positions}">
+                            <font size="4" face="Arial">${position.startDate} / ${position.endDate}</font><br>
+                            <font size="3" face="Arial">${position.position}</font><br>
+                            <font size="2" face="Arial">${position.description}</font><br><br>
+                        </c:forEach>
+                    </c:forEach>
+                </ol>
             </td>
-        </tr>
-        </c:forEach>
-        </c:forEach>
-        </ol>
-        </td>
         </tr>
         </c:when>
         </c:choose>
