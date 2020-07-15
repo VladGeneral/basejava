@@ -24,6 +24,8 @@ public class Resume implements Comparable<Resume>, Serializable {
         EMPTY_RESUME.setSection(SectionType.OBJECTIVE, new TextSection(""));
         EMPTY_RESUME.setSection(SectionType.ACHIEVEMENT, new ListSection(""));
         EMPTY_RESUME.setSection(SectionType.QUALIFICATIONS, new ListSection(""));
+        EMPTY_RESUME.setSection(SectionType.EXPERIENCE, new OrganizationSection(Organization.EMPTY_ORGANIZATION));
+        EMPTY_RESUME.setSection(SectionType.EDUCATION, new OrganizationSection(Organization.EMPTY_ORGANIZATION));
     }
 
     // Unique identifier

@@ -1,5 +1,6 @@
 <%@ page import="com.urice.webapp.model.ListSection" %>
 <%@ page import="com.urice.webapp.model.TextSection" %>
+<%@ page import="com.urice.webapp.model.OrganizationSection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -55,6 +56,27 @@
                     </c:forEach>
                 </ol>
             </td>
+        </tr>
+        </c:when>
+        <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
+        <tr>
+            <td>
+                <ol>
+                    <c:forEach var="organization" items="<%=((OrganizationSection) section).getData()%>">
+                    <li><a href="${organization.homePage.url}">${organization.homePage.name}</a</li>
+                    <c:forEach var="position" items="${organization.positions}">
+        <tr>
+                <td>
+                    ${position.startDate + "-" + position.endDate}
+                </td>
+            <td>
+                ${position.position}<br>${position.description}
+            </td>
+        </tr>
+        </c:forEach>
+        </c:forEach>
+        </ol>
+        </td>
         </tr>
         </c:when>
         </c:choose>
