@@ -18,7 +18,7 @@ import static com.urice.webapp.util.DateUtil.NOW;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
-    public static final Organization EMPTY_ORGANIZATION = new Organization("", "", Position.EMPTY_POSITION);
+    public static final Organization EMPTY = new Organization("", "", Position.EMPTY);
 
     private Link homePage;
     private List<Position> positions;
@@ -69,7 +69,7 @@ public class Organization implements Serializable {
 
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
-        public static final Position EMPTY_POSITION = new Position();
+        public static final Position EMPTY = new Position();
 
         @XmlJavaTypeAdapter(YearMonthAdapter.class)
         private YearMonth startDate;

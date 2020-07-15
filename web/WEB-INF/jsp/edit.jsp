@@ -1,6 +1,7 @@
 <%@ page import="com.urice.webapp.model.ContactType" %>
 <%@ page import="com.urice.webapp.model.ListSection" %>
 <%@ page import="com.urice.webapp.model.SectionType" %>
+<%@ page import="com.urice.webapp.model.OrganizationSection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -45,6 +46,36 @@
                 <c:when test="${type=='ACHIEVEMENT' || type=='QUALIFICATIONS'}">
                     <textarea name='${type}' cols=100
                               rows=10><%=String.join("\n", ((ListSection) section).getData())%></textarea>
+                </c:when>
+                <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
+                    <c:forEach var="organization" items="<%=((OrganizationSection) section).getData()%>">
+                        <dl>
+                            <dt>Название:</dt>
+                            <dd><input type="text" value="${organization.homePage.name}"></dd>
+                        </dl>
+                        <dl>
+                            <dt>Сайт:</dt>
+                            <dd><input type="text" value="${organization.homePage.url}"></dd>
+                        </dl>
+                    <c:forEach var="position" items="${organization.positions}">
+                        <dl>
+                            <dt>Период:</dt>
+                            <dd><input type="text" value="${position.startDate + "-" + position.endDate}"></dd>
+
+                        </dl>
+                        <dl>
+                            <dt>Должность:</dt>
+                            <dd><input type="text" value="${position.position}"></dd>
+
+                        </dl>
+                        <dl>
+                            <dt>Описание:</dt>
+                            <dd><input type="text" value="${position.description}"></dd>
+
+                        </dl>
+                    </c:forEach>
+                    </c:forEach>
+
                 </c:when>
             </c:choose>
         </c:forEach>

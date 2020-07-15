@@ -54,6 +54,9 @@ public class ResumeServlet extends HttpServlet {
                     case QUALIFICATIONS:
                         r.setSection(type, new ListSection(value.split("\n")));
                         break;
+                    case EXPERIENCE:
+                    case EDUCATION:
+
                 }
             } else {
                 r.getSectionMap().remove(type);
@@ -85,9 +88,30 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             case "view":
-            case "edit":
                 r = storage.get(uuid);
                 break;
+            case "edit":
+                r = storage.get(uuid);
+                for (SectionType sectionType : SectionType.values()){
+                    AbstractSection section = r.getSection(sectionType);
+                    switch (sectionType){
+                        case PERSONAL:
+                        case OBJECTIVE:
+                            if (section == null){
+                                section = TextSection.EMPTY;
+                            }
+                        case ACHIEVEMENT:
+                        case QUALIFICATIONS:
+                            if (section == null){
+                                section = ListSection.EMPTY;
+                            }
+                        case EXPERIENCE:
+                        case EDUCATION:
+                            if (section == null){
+                                section = new OrganizationSection(Organization.EMPTY);
+                            }
+                    }
+                }
             default:
                 throw new IllegalStateException("Action " + action + " is illegal");
         }
