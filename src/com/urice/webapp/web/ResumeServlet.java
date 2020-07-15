@@ -61,29 +61,24 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        r.getSectionMap().remove(type);
                         List<Organization> organizationsList = new ArrayList<>();
-                        String[] urls = request.getParameterValues(type.name() + "url");
                         String[] names = request.getParameterValues(type.name());
-                        for (int i = 0; i < 1; i++) {
+                        String[] urls = request.getParameterValues(type.name() + "url");
+                        for (int i = 0; i < names.length; i++) {
                             List<Organization.Position> positionList = new ArrayList<>();
-                        String[] startDates = request.getParameterValues(type.name() + i + "startDate");
-                        String[] endDates = request.getParameterValues(type.name() + i + "endDate");
-                        String[] positions = request.getParameterValues(type.name() + i + "position");
-                        String[] descriptions = request.getParameterValues(type.name() + i + "description");
-                        for (int j = 0; j < positions.length; j++) {
-
-                            if (positions != null) {
-
-                                positionList.add(new Organization.Position(
-                                        YearMonth.parse(startDates[j]),
-                                        YearMonth.parse(endDates[j]),
-                                        positions[j],
-                                        descriptions[j]));
-
+                            String[] startDates = request.getParameterValues(type.name() + i + "startDate");
+                            String[] endDates = request.getParameterValues(type.name() + i + "endDate");
+                            String[] positions = request.getParameterValues(type.name() + i + "position");
+                            String[] descriptions = request.getParameterValues(type.name() + i + "description");
+                            for (int j = 0; j < positions.length; j++) {
+                                if (positions != null) {
+                                    positionList.add(new Organization.Position(
+                                            YearMonth.parse(startDates[j]),
+                                            YearMonth.parse(endDates[j]),
+                                            positions[j],
+                                            descriptions[j]));
+                                }
                             }
-
-                        }
                             organizationsList.add(new Organization(new Link(names[i], urls[i]), positionList));
                         }
                         r.setSection(type, new OrganizationSection(organizationsList));

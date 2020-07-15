@@ -48,7 +48,8 @@
                               rows=10><%=String.join("\n", ((ListSection) section).getData())%></textarea>
                 </c:when>
                 <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
-                    <c:forEach var="organization" items="<%=((OrganizationSection) section).getData()%>">
+                    <c:forEach var="organization" varStatus="counter" begin="0" end="50" step="1"
+                               items="<%=((OrganizationSection) section).getData()%>">
                         <dl>
                             <dt>Название:</dt>
                             <dd><input type="text" name='${type}' value="${organization.homePage.name}"></dd>
@@ -58,21 +59,26 @@
                             <dt>Сайт:</dt>
                             <dd><input type="text" name='${type}url' value="${organization.homePage.url}"></dd>
                         </dl>
-                        <c:forEach var="position" varStatus="counter" begin="0" end="50" step="1" items="${organization.positions}">
+                        <c:forEach var="position" items="${organization.positions}">
+
                             <dl>
                                 <dt>Период:</dt>
-                                <dd><input type="text" name='${type}${counter.count}startDate' value="${position.startDate}"></dd>
-                                <dd><input type="text" name='${type}${counter.count}endDate' value="${position.endDate}"></dd>
+                                <dd><input type="text" name='${type}${counter.index}startDate'
+                                           value="${position.startDate}"></dd>
+                                <dd><input type="text" name='${type}${counter.index}endDate'
+                                           value="${position.endDate}"></dd>
 
                             </dl>
                             <dl>
                                 <dt>Должность:</dt>
-                                <dd><input type="text" name='${type}${counter.count}position' value="${position.position}"></dd>
+                                <dd><input type="text" name='${type}${counter.index}position'
+                                           value="${position.position}"></dd>
 
                             </dl>
                             <dl>
                                 <dt>Описание:</dt>
-                                <dd><input type="text" name='${type}${counter.count}description' value="${position.description}"></dd>
+                                <dd><input type="text" name='${type}${counter.index}description'
+                                           value="${position.description}"></dd>
 
                             </dl>
                         </c:forEach>
