@@ -67,7 +67,8 @@
                     <c:forEach var="position" items="${organization.positions}">
         <tr>
                 <td>
-                    ${position.startDate + "-" + position.endDate}
+                    ${position.startDate}
+                    ${position.endDate}
                 </td>
             <td>
                 ${position.position}<br>${position.description}

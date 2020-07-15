@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -44,6 +47,7 @@ public class ResumeServlet extends HttpServlet {
 
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
+            String[] values = request.getParameterValues(type.name());
             if (value != null && value.trim().length() != 0) {
                 switch (type) {
                     case PERSONAL:
@@ -56,6 +60,24 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
+                        List<Organization> organizationsList = new ArrayList<>();
+                        List<Organization.Position> positionList = new ArrayList<>();
+                        String[] names = request.getParameterValues(type.name()+ "name");
+                        String[] urls = request.getParameterValues(type.name()+ "urls");
+                        String[] startDates = request.getParameterValues(type.name()+ "startDate");
+                        String[] endDates = request.getParameterValues(type.name()+ "endDate");
+                        String[] positions = request.getParameterValues(type.name()+ "title");
+                        String[] descriptions = request.getParameterValues(type.name()+ "description");
+                        for (int i = 0; i < positions.length; i++) {
+                            positionList.add(new Organization.Position(
+                                    YearMonth.parse(startDates[i]),
+                                    YearMonth.parse(endDates[i]),
+                                    positions[i],
+                                    descriptions[i]));
+                        }
+
+
+                        break;
 
                 }
             } else {
@@ -100,18 +122,32 @@ public class ResumeServlet extends HttpServlet {
                             if (section == null){
                                 section = TextSection.EMPTY;
                             }
+                            break;
                         case ACHIEVEMENT:
                         case QUALIFICATIONS:
                             if (section == null){
                                 section = ListSection.EMPTY;
                             }
+                            break;
                         case EXPERIENCE:
                         case EDUCATION:
-                            if (section == null){
+                            OrganizationSection organizationSection = (OrganizationSection) section;
+                            List<Organization> list = new ArrayList<>();
+                            if (organizationSection == null){
                                 section = new OrganizationSection(Organization.EMPTY);
+                            } else{
+                                for (Organization organization: organizationSection.getData()){
+                                    List<Organization.Position> positions = new ArrayList<>();
+                                    positions.addAll(organization.getPositions());
+                                    list.add(new Organization(organization.getHomePage(), positions));
+                                }
+                                section = new OrganizationSection(list);
                             }
+                            break;
                     }
+                    r.setSection(sectionType,section);
                 }
+                break;
             default:
                 throw new IllegalStateException("Action " + action + " is illegal");
         }

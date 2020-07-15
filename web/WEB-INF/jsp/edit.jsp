@@ -51,29 +51,30 @@
                     <c:forEach var="organization" items="<%=((OrganizationSection) section).getData()%>">
                         <dl>
                             <dt>Название:</dt>
-                            <dd><input type="text" value="${organization.homePage.name}"></dd>
+                            <dd><input type="text" name='${type}name' value="${organization.homePage.name}"></dd>
                         </dl>
                         <dl>
                             <dt>Сайт:</dt>
-                            <dd><input type="text" value="${organization.homePage.url}"></dd>
+                            <dd><input type="text" name='${type}url' value="${organization.homePage.url}"></dd>
                         </dl>
-                    <c:forEach var="position" items="${organization.positions}">
-                        <dl>
-                            <dt>Период:</dt>
-                            <dd><input type="text" value="${position.startDate + "-" + position.endDate}"></dd>
+                        <c:forEach var="position" items="${organization.positions}">
+                            <dl>
+                                <dt>Период:</dt>
+                                <dd><input type="text" name='${type}startDate' value="${position.startDate}"></dd>
+                                <dd><input type="text" name='${type}endDate' value="${position.endDate}"></dd>
 
-                        </dl>
-                        <dl>
-                            <dt>Должность:</dt>
-                            <dd><input type="text" value="${position.position}"></dd>
+                            </dl>
+                            <dl>
+                                <dt>Должность:</dt>
+                                <dd><input type="text" name='${type}position' value="${position.position}"></dd>
 
-                        </dl>
-                        <dl>
-                            <dt>Описание:</dt>
-                            <dd><input type="text" value="${position.description}"></dd>
+                            </dl>
+                            <dl>
+                                <dt>Описание:</dt>
+                                <dd><input type="text" name='${type}description' value="${position.description}"></dd>
 
-                        </dl>
-                    </c:forEach>
+                            </dl>
+                        </c:forEach>
                     </c:forEach>
 
                 </c:when>
