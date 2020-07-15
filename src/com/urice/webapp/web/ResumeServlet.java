@@ -47,7 +47,6 @@ public class ResumeServlet extends HttpServlet {
 
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
-            String[] values = request.getParameterValues(type.name());
             if (value != null && value.trim().length() != 0) {
                 switch (type) {
                     case PERSONAL:
@@ -55,27 +54,35 @@ public class ResumeServlet extends HttpServlet {
                         r.setSection(type, new TextSection(value));
                         break;
                     case ACHIEVEMENT:
+                        r.setSection(type, new ListSection(value.split("\n")));
+                        break;
                     case QUALIFICATIONS:
                         r.setSection(type, new ListSection(value.split("\n")));
+                        int x =0;
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
                         List<Organization> organizationsList = new ArrayList<>();
                         List<Organization.Position> positionList = new ArrayList<>();
-                        String[] names = request.getParameterValues(type.name()+ "name");
-                        String[] urls = request.getParameterValues(type.name()+ "urls");
-                        String[] startDates = request.getParameterValues(type.name()+ "startDate");
-                        String[] endDates = request.getParameterValues(type.name()+ "endDate");
-                        String[] positions = request.getParameterValues(type.name()+ "title");
-                        String[] descriptions = request.getParameterValues(type.name()+ "description");
-                        for (int i = 0; i < positions.length; i++) {
-                            positionList.add(new Organization.Position(
-                                    YearMonth.parse(startDates[i]),
-                                    YearMonth.parse(endDates[i]),
-                                    positions[i],
-                                    descriptions[i]));
+                        String[] names = request.getParameterValues(type.name());
+                        String[] urls = request.getParameterValues(type.name()+ "url");
+                        for (int i = 0; i < names.length ; i++) {
+                            String[] startDates = request.getParameterValues(type.name() + i + "startDate");
+                            String[] endDates = request.getParameterValues(type.name() + i + "endDate");
+                            String[] positions = request.getParameterValues(type.name() + i + "position");
+                            String[] descriptions = request.getParameterValues(type.name() + i + "description");
+                            for (int j = 0; j < positions.length; j++) {
+                                if (positions != null) {
+                                    positionList.add(new Organization.Position(
+                                            YearMonth.parse(startDates[j]),
+                                            YearMonth.parse(endDates[j]),
+                                            positions[j],
+                                            descriptions[j]));
+                                }
+                            }
+                            organizationsList.add(new Organization(new Link(names[i], urls[i]), positionList));
                         }
-
+                        r.setSection(type,new OrganizationSection(organizationsList));
 
                         break;
 
