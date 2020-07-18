@@ -54,8 +54,6 @@ public class ResumeServlet extends HttpServlet {
                         r.setSection(type, new TextSection(value));
                         break;
                     case ACHIEVEMENT:
-                        r.setSection(type, new ListSection(value.split("\n")));
-                        break;
                     case QUALIFICATIONS:
                         r.setSection(type, new ListSection(value.split("\n")));
                         break;
