@@ -3,6 +3,7 @@ package com.urice.webapp.web;
 import com.urice.webapp.Config;
 import com.urice.webapp.model.*;
 import com.urice.webapp.storage.Storage;
+import com.urice.webapp.util.DateUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -10,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,8 +73,8 @@ public class ResumeServlet extends HttpServlet {
                             for (int j = 0; j < positions.length; j++) {
                                 if (positions != null) {
                                     positionList.add(new Organization.Position(
-                                            YearMonth.parse(startDates[j]),
-                                            YearMonth.parse(endDates[j]),
+                                            DateUtil.parse(startDates[j]),
+                                            DateUtil.parse(endDates[j]),
                                             positions[j],
                                             descriptions[j]));
                                 }

@@ -63,9 +63,9 @@
 
                             <dl>
                                 <dt>Период:</dt>
-                                <dd><input type="text" name='${type}${counter.index}startDate'
+                                <dd><input type="text" placeholder="yyyy-MM" name='${type}${counter.index}startDate'
                                            value="${position.startDate}"></dd>
-                                <dd><input type="text" name='${type}${counter.index}endDate'
+                                <dd><input type="text" placeholder="yyyy-MM" name='${type}${counter.index}endDate'
                                            value="${position.endDate}"></dd>
 
                             </dl>

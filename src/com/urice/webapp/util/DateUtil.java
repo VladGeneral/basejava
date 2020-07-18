@@ -14,4 +14,13 @@ public class DateUtil {
     public static YearMonth of(int year, Month month) {
         return YearMonth.of(year, month);
     }
+
+    public static YearMonth parse(String str) {
+        if (!str.contains("-")) {
+            return NOW;
+        } else {
+            String[] strs = str.split("-");
+            return YearMonth.of(Integer.parseInt(strs[0]), Integer.parseInt(strs[1]));
+        }
+    }
 }
