@@ -4,6 +4,7 @@ import com.urice.webapp.Config;
 import com.urice.webapp.model.*;
 import com.urice.webapp.storage.Storage;
 import com.urice.webapp.util.DateUtil;
+import com.urice.webapp.util.HtmlUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -27,9 +28,8 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        boolean isExist = (uuid != null && uuid.trim().length() != 0);
         Resume r;
-        if (!isExist) {
+        if (!HtmlUtil.isEmpty(uuid)) {
             r = new Resume(fullName);
         } else {
             r = storage.get(uuid);
@@ -38,7 +38,7 @@ public class ResumeServlet extends HttpServlet {
 
         for (ContactType contactType : ContactType.values()) {
             String value = request.getParameter(contactType.name());
-            if (value != null && value.trim().length() != 0) {
+            if (HtmlUtil.isEmpty(value)) {
                 r.setContact(contactType, value);
             } else {
                 r.getContactMap().remove(contactType);
@@ -47,7 +47,7 @@ public class ResumeServlet extends HttpServlet {
 
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
-            if (value != null && value.trim().length() != 0) {
+            if (HtmlUtil.isEmpty(value)) {
                 switch (type) {
                     case PERSONAL:
                     case OBJECTIVE:
@@ -69,7 +69,7 @@ public class ResumeServlet extends HttpServlet {
                             String[] positions = request.getParameterValues(type.name() + i + "position");
                             String[] descriptions = request.getParameterValues(type.name() + i + "description");
                             for (int j = 0; j < positions.length; j++) {
-                                if (positions != null) {
+                                if (HtmlUtil.isEmpty(positions[j])) {
                                     positionList.add(new Organization.Position(
                                             DateUtil.parse(startDates[j]),
                                             DateUtil.parse(endDates[j]),
@@ -86,7 +86,7 @@ public class ResumeServlet extends HttpServlet {
                 r.getSectionMap().remove(type);
             }
         }
-        if (!isExist) {
+        if (!HtmlUtil.isEmpty(uuid)) {
             storage.save(r);
         } else {
             storage.update(r);
