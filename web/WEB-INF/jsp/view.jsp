@@ -42,14 +42,14 @@
         </c:when>
         <c:when test="${type=='OBJECTIVE'}">
         <tr>
-            <td>
+            <td colspan="2">
                 <%=((TextSection) section).getContent()%>
             </td>
         </tr>
         </c:when>
         <c:when test="${type=='ACHIEVEMENT' || type=='QUALIFICATIONS'}">
         <tr>
-            <td>
+            <td colspan="2">
                 <ol>
                     <c:forEach var="value" items="<%=((ListSection) section).getData()%>">
                         <li>${value}</li>
